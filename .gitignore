@@ -1,0 +1,61 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+dist/
+build/
+.cache/
+out-tsc/
+*.tsbuildinfo
+
+# Env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Log files
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# JetBrains IDE
+*.iml
+*.iws
+*.ipr
+
+# React Native (if ever)
+android/
+ios/
+*.keystore
+*.hprof
+
+# Coverage reports
+coverage/
+*.lcov
+
+tmp/
+temp/
+
+.npm/
+
+# Yarn
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/versions
+!.yarn/sdks
+!.yarn/patches
+.pnp.*

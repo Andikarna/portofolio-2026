@@ -1,0 +1,209 @@
+/* ==========================
+   Global Styles
+========================== */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #000; /* hitam pekat */
+  color: #e0e0e0;
+}
+
+/* ==========================
+   Navbar
+========================== */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.6); /* semi-transparent hitam */
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Logo */
+nav .logo a {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+nav .logo a:hover {
+  color: #4f46e5;
+}
+
+/* Menu Links */
+nav div a {
+  margin-left: 1.5rem;
+  color: #e0e0e0;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+nav div a:hover {
+  color: #4f46e5;
+}
+
+/* ==========================
+   Hero Section
+========================== */
+.hero {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 5rem;
+  background: linear-gradient(135deg, #000000, #111111, #1a1a1a);
+  gap: 2rem;
+  min-height: 80vh;
+  flex-wrap: wrap;
+}
+
+/* Hero Columns */
+.hero-left,
+.hero-right {
+  flex: 1;
+  min-width: 280px;
+}
+
+/* Kolom Kiri */
+.hero-left h1 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+}
+
+.hero-left p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  color: #e0e0e0;
+}
+
+/* Tombol modern */
+.hero-left .btn-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-left button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+}
+
+/* Register Button */
+.register-btn {
+  background: linear-gradient(90deg, #ff6a00, #ee0979);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(255, 106, 0, 0.4);
+}
+
+.register-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 106, 0, 0.6);
+}
+
+/* Guest Button */
+.guest-btn {
+  background-color: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.guest-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  background-color: rgba(255,255,255,0.2);
+}
+
+/* Kolom Kanan: Ilustrasi */
+.hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-illustration {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  transition: transform 0.3s;
+}
+
+.hero-illustration:hover {
+  transform: scale(1.05);
+}
+
+/* ==========================
+   Projects Section
+========================== */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.project-card {
+  background-color: #1f1f1f;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+.project-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.project-card p {
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+/* ==========================
+   Responsive
+========================== */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-left {
+    margin-bottom: 2rem;
+  }
+
+  .hero-left .btn-group {
+    justify-content: center;
+  }
+
+  .hero-right {
+    margin-bottom: 2rem;
+  }
+
+  .hero-illustration {
+    max-width: 90%;
+  }
+}
