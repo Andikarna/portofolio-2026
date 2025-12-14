@@ -1,0 +1,123 @@
+.logout-link {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* lebih subtle */
+}
+
+.logout-link:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.08);
+}
+
+.logout-link:active {
+  transform: scale(0.97);
+}
+
+.logout-link svg {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+
+
+.login-link {
+  color: #fff;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* lebih subtle */
+}
+
+.login-link svg {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+
+
+.app-bg {
+  min-height: 100vh;
+  position: relative;
+  background: linear-gradient(120deg, #0a0a0a, #121212);
+}
+
+.app-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background: url("../assets/bg-motif.png") repeat;
+  background-size: 260px 260px;
+  background-position: center;
+
+  opacity: 30%;
+  filter: grayscale(100%) contrast(120%);
+  mix-blend-mode: soft-light;
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Semua konten di atas background */
+.app-bg>* {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ==========================
+   Navbar
+========================== */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+nav .logo a {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+nav .logo a:hover {
+  color: #4f46e5;
+}
+
+nav div a {
+  margin-left: 1.5rem;
+  color: #e0e0e0;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+nav div a:hover {
+  color: #4f46e5;
+}
