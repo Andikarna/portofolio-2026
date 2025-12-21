@@ -9,8 +9,12 @@ import Loby from "./views/loby.jsx";
 import { jwtDecode } from "jwt-decode";
 import { logout } from "./api/api.js";
 
+
 import "./css/base.css";
 import "./css/layout.css";
+import Experience from "./views/page/experience.jsx";
+import Skills from "./views/page/skills.jsx";
+import Project from "./views/page/project.jsx";
 
 function App() {
   const navigate = useNavigate();
@@ -80,6 +84,9 @@ function App() {
         <Route path="/form" element={<Form />} />
         <Route path="/register" element={<Register />} />
         <Route path="/loby" element={<Loby />} />
+        <Route path="/experience" element={<Experience />} />
+        <Route path="/skills" element={<Skills />} />
+        <Route path="/project" element={<Project />} />
         <Route path="*" element={<Home />} /> {/* fallback */}
       </Routes>
     </div>

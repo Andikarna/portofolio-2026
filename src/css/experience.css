@@ -1,0 +1,193 @@
+/* ================================
+   EXPERIENCE CONTAINER
+================================ */
+.experience-container {
+  width: 100%;
+  max-width: 1400px;
+  /* batas aman desktop besar */
+  margin: 0 auto;
+  padding: 0 100px;
+  /* desktop padding */
+  box-sizing: border-box;
+}
+
+/* ================================
+   EXPERIENCE LIST (1 COLUMN)
+================================ */
+.experience-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* PAKSA 1 kolom */
+  gap: 24px;
+  margin-top: 32px;
+}
+
+/* ================================
+   EXPERIENCE CARD
+================================ */
+.experience-card {
+  position: relative;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  padding: 28px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.experience-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* ================================
+   TEXT & META
+================================ */
+.experience-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.company {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+/* ================================
+   STACK / BADGES
+================================ */
+.stack {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.badge {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* HEADER META */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.experience-header {
+  display: flex;
+}
+
+/* ROLE */
+.role {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.experience-header{
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+/* .status {
+  position: absolute;
+  width: 100px;
+  top: 20px;
+  right: 20px;
+
+  font-size: 0.7rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 500;
+  white-space: nowrap;
+
+  backdrop-filter: blur(6px);
+  border: 1px solid transparent;
+} */
+
+
+
+/* .status.active {
+  
+  background: rgba(0, 200, 120, 0.15);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.status.completed {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.35);
+} */
+
+/* COMPANY & PERIOD */
+.company {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+/* DESCRIPTION */
+.description {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  opacity: 0.9;
+}
+
+
+
+/* ================================
+   RESPONSIVE – TABLET
+================================ */
+@media (max-width: 1024px) {
+  .experience-container {
+    padding: 0 25px;
+  }
+
+  .experience-card {
+    padding: 24px 26px;
+  }
+}
+
+/* ================================
+   RESPONSIVE – MOBILE
+================================ */
+@media (max-width: 640px) {
+  .experience-container {
+    padding: 0 10px;
+  }
+
+  .experience-card {
+    padding: 20px;
+  }
+
+  .experience-card h3 {
+    font-size: 1rem;
+  }
+
+  .company {
+    font-size: 0.85rem;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 5px 12px;
+  }
+}

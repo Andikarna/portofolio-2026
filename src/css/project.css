@@ -1,0 +1,164 @@
+/* ===============================
+   CONTAINER
+================================ */
+.project-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 100px 80px;
+}
+
+.project-header {
+  margin-top: 60px;
+  max-width: 600px;
+}
+
+.project-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.project-header p {
+  margin-top: 10px;
+  opacity: 0.75;
+}
+
+/* ===============================
+   GRID
+================================ */
+.project-grid {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+/* ===============================
+   CARD
+================================ */
+.project-card {
+  position: relative;
+  padding: 20px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Featured */
+.project-card.featured {
+  border-color: rgba(110, 231, 183, 0.45);
+  background: rgba(110, 231, 183, 0.06);
+}
+
+/* ===============================
+   IMAGE
+================================ */
+.project-image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.project-image img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.project-card:hover img {
+  transform: scale(1.05);
+}
+
+/* ===============================
+   STATUS
+================================ */
+.status {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  padding: 4px 10px;
+  font-size: 0.65rem;
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+}
+
+.status.ongoing {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fde68a;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.status.completed {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+/* ===============================
+   FEATURED ICON
+================================ */
+.featured-icon {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  color: #facc15;
+  font-size: 0.9rem;
+}
+
+/* ===============================
+   CONTENT
+================================ */
+.project-content {
+  padding-top: 14px;
+}
+
+.project-content h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.project-content p {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+/* ===============================
+   ACTIONS
+================================ */
+.actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 14px;
+}
+
+.actions a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: #ffffff;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.actions a:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .project-container {
+    padding: 0 20px 60px;
+  }
+}

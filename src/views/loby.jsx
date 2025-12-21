@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
+import TopActions from "../views/components/top-actions.jsx";
 import "../css/loby.css";
 
 export default function Loby() {
@@ -24,20 +25,21 @@ export default function Loby() {
   return (
     <section className="loby">
 
-      <div className="top-actions">
-        <button className="action-btn ghost" onClick={() => navigate("/")}>
-          Home
-        </button>
-        <button className="action-btn ghost" onClick={() => navigate("/about")}>
+      <TopActions />
+      {/* <div className="top-actions">
+        <button className="action-btn primary" onClick={() => navigate("/loby")}>
           About Me
+        </button>
+        <button className="action-btn ghost" onClick={() => navigate("/experience")}>
+          Experience
         </button>
         <button className="action-btn ghost" onClick={() => navigate("/skills")}>
           Skills
         </button>
-        <button className="action-btn primary" onClick={() => navigate("/contact")}>
+        <button className="action-btn ghost" onClick={() => navigate("/contact")}>
           Hire Me
         </button>
-      </div>
+      </div> */}
 
       <div className="loby-container">
 

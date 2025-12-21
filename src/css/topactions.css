@@ -1,0 +1,111 @@
+.top-actions-wrapper {
+  position: relative;
+  z-index: 9999;
+}
+
+/* ===============================
+   DESKTOP
+================================ */
+.top-actions.desktop {
+  display: flex;
+  gap: 16px;
+}
+
+/* ===============================
+   MOBILE
+================================ */
+.top-actions.mobile {
+  display: none;
+}
+
+/* ===============================
+   HAMBURGER BUTTON
+================================ */
+.hamburger {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: inherit;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s ease, border 0.2s ease;
+}
+
+.hamburger:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ===============================
+   MOBILE DROPDOWN MENU
+================================ */
+.mobile-menu {
+  position: absolute;
+  top: 56px;
+  right: 0;
+  min-width: 200px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  z-index: 10001;
+
+  /* Loby glass style */
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  backdrop-filter: blur(12px);
+
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  animation: fadeSlide 0.2s ease;
+}
+
+/* Menu Item */
+.mobile-menu button {
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.mobile-menu button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ===============================
+   ANIMATION
+================================ */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================
+   RESPONSIVE SWITCH
+================================ */
+@media (max-width: 768px) {
+  .top-actions.desktop {
+    display: none;
+  }
+
+  .top-actions.mobile {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
