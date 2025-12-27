@@ -118,6 +118,15 @@ nav div a {
   transition: color 0.2s;
 }
 
-nav div a:hover {
-  color: #4f46e5;
+
+/* ==========================
+   Shared Layout
+========================== */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }

@@ -8,13 +8,18 @@ import Register from "./views/register.jsx";
 import Loby from "./views/loby.jsx";
 import { jwtDecode } from "jwt-decode";
 import { logout } from "./api/api.js";
+import AuthGuard from "./views/components/auth-guard.jsx";
 
 
 import "./css/base.css";
 import "./css/layout.css";
 import Experience from "./views/page/experience.jsx";
 import Skills from "./views/page/skills.jsx";
+
 import Project from "./views/page/project.jsx";
+import Article from "./views/page/article.jsx";
+import ArticleDetail from "./views/page/article-detail.jsx";
+import ProjectDetail from "./views/page/project-detail.jsx";
 
 function App() {
   const navigate = useNavigate();
@@ -67,7 +72,6 @@ function App() {
             </Link>
           ) : (
             <>
-              <Link to="/user">Projects</Link>
               <Link to="/" className="logout-link" onClick={handleLogout}>
                 <FaSignOutAlt />
                 {loading ? "Logging out..." : "Logout"}
@@ -83,10 +87,13 @@ function App() {
         <Route path="/user" element={<GetUserView />} />
         <Route path="/form" element={<Form />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/loby" element={<Loby />} />
-        <Route path="/experience" element={<Experience />} />
-        <Route path="/skills" element={<Skills />} />
-        <Route path="/project" element={<Project />} />
+        <Route path="/loby" element={<AuthGuard><Loby /></AuthGuard>} />
+        <Route path="/experience" element={<AuthGuard><Experience /></AuthGuard>} />
+        <Route path="/skills" element={<AuthGuard><Skills /></AuthGuard>} />
+        <Route path="/project" element={<AuthGuard><Project /></AuthGuard>} />
+        <Route path="/project/:id" element={<AuthGuard><ProjectDetail /></AuthGuard>} />
+        <Route path="/article" element={<AuthGuard><Article /></AuthGuard>} />
+        <Route path="/article/:id" element={<AuthGuard><ArticleDetail /></AuthGuard>} />
         <Route path="*" element={<Home />} /> {/* fallback */}
       </Routes>
     </div>

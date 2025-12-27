@@ -98,42 +98,76 @@
   font-weight: 600;
 }
 
-.experience-header{
+.experience-header {
   display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 12px;
   margin-bottom: 8px;
+  width: 100%;
 }
 
-/* .status {
-  position: absolute;
-  width: 100px;
-  top: 20px;
-  right: 20px;
-
-  font-size: 0.7rem;
-  padding: 6px 12px;
+.experience-status {
+  /* Removed absolute positioning for better flow */
+  font-size: 0.75rem;
+  padding: 6px 14px;
   border-radius: 999px;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
-
   backdrop-filter: blur(6px);
   border: 1px solid transparent;
-} */
-
-
-
-/* .status.active {
-  
-  background: rgba(0, 200, 120, 0.15);
-  color: #4ade80;
-  border-color: rgba(74, 222, 128, 0.35);
+  align-self: flex-start; /* Align to top if header wraps */
 }
 
-.status.completed {
+.experience-status.active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.experience-status.completed {
   background: rgba(148, 163, 184, 0.15);
-  color: #cbd5e1;
-  border-color: rgba(148, 163, 184, 0.35);
-} */
+  color: #94a3b8;
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+
+/* PAGINATION */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.page-btn {
+  background: #262626;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: #4f46e5;
+  border-color: #4f46e5;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #1a1a1a;
+}
+
+.page-info {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
 
 /* COMPANY & PERIOD */
 .company {

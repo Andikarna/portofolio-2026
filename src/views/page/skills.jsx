@@ -73,7 +73,7 @@ export default function Skills() {
     <section className="loby">
       <TopActions />
 
-      <div className="skills-container">
+      <div className="page-container">
         <div className="loby-right full">
           <h1>Skills & Expertise</h1>
           <p className="intro">

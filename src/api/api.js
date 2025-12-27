@@ -44,12 +44,28 @@ export const login = async ({ email, password }) => {
 
 export const logout = async (id) => {
   const response = await api.delete(
-    `/Authentication/Logout?id=${encodeURIComponent(id)}`,{
+    `/Authentication/Logout?id=${encodeURIComponent(id)}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+  );
+
+  return response.data;
+};
+
+export const refreshToken = async ({ token, refreshToken }) => {
+  const response = await api.post(
+    `/Authentication/RefreshToken`,
+    {
+      token: token,
+      refreshToken: refreshToken
+    },
+    {
       headers: {
         "Content-Type": "application/json",
       },
     }
   );
-  
   return response.data;
 };

@@ -1,9 +1,11 @@
-
+import { useState } from "react";
 import { FaArrowLeft, FaBriefcase } from "react-icons/fa";
 import TopActions from "../components/top-actions.jsx";
 import "../../css/experience.css";
 
 export default function Experience() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 4;
 
   const experiences = [
     {
@@ -35,6 +37,17 @@ export default function Experience() {
     },
   ];
 
+  const totalPages = Math.ceil(experiences.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentData = experiences.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage((p) => p - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage((p) => p + 1);
+  };
 
   return (
     <section className="loby">
@@ -42,7 +55,7 @@ export default function Experience() {
       <TopActions />
 
       {/* Content */}
-      <div className="experience-container">
+      <div className="page-container">
         <div className="loby-right full">
           <h1>Professional Experience</h1>
           <p className="intro">
@@ -51,7 +64,7 @@ export default function Experience() {
           </p>
 
           <div className="experience-list">
-            {experiences.map((exp, index) => (
+            {currentData.map((exp, index) => (
               <div className="experience-card" key={index}>
 
                 <div className="experience-header">
@@ -59,13 +72,13 @@ export default function Experience() {
                     <FaBriefcase /> {exp.role}
                   </div>
 
-                  {/* {exp.status === "active" && (
-                    <div className="status active">Currently Working</div>
+                  {exp.status === "active" && (
+                    <div className="experience-status active">Currently Working</div>
                   )}
 
                   {exp.status === "completed" && (
-                    <div className="status completed">Completed</div>
-                  )} */}
+                    <div className="experience-status completed">Completed</div>
+                  )}
                 </div>
 
 
@@ -85,6 +98,31 @@ export default function Experience() {
               </div>
             ))}
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className="page-btn"
+                onClick={handlePrev}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+
+              <span className="page-info">
+                Halaman {currentPage} dari {totalPages}
+              </span>
+
+              <button
+                className="page-btn"
+                onClick={handleNext}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          )}
 
 
         </div>

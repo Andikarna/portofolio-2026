@@ -1,7 +1,7 @@
 // views/form.jsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaEnvelope, FaLock } from "react-icons/fa";
+import { FaArrowLeft, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import "../css/form.css";
 import { login } from "../api/api";
 
@@ -20,6 +20,8 @@ export default function Form() {
     email: "",
     password: ""
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -106,13 +108,24 @@ export default function Form() {
           <div className="input-wrapper">
             <FaLock />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Your password"
               required
             />
+            {showPassword ? (
+              <FaEyeSlash
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            ) : (
+              <FaEye
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            )}
           </div>
 
           <div className="btn-group">
