@@ -1,70 +1,93 @@
-import { FaArrowLeft, FaStar } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { FaStar, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import {
+  SiReact, SiJavascript, SiTailwindcss, SiAndroid, SiDotnet, SiFirebase, SiGit,
+  SiHtml5, SiCss3, SiTypescript, SiNodedotjs, SiMongodb, SiMysql, SiPostgresql,
+  SiDocker, SiFigma
+} from "react-icons/si";
 import TopActions from "../components/top-actions.jsx";
 import "../../css/skill.css";
+import { getSkills, deleteSkill } from "../../api/api";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
-import {
-  SiReact,
-  SiJavascript,
-  SiTailwindcss,
-  SiAndroid,
-  SiDotnet,
-  SiFirebase,
-  SiGit,
-} from "react-icons/si";
+// Icon Mapping Helper
+const ICON_MAP = {
+  "React": <SiReact />,
+  "JavaScript": <SiJavascript />,
+  "Tailwind": <SiTailwindcss />,
+  "Android": <SiAndroid />,
+  ".NET": <SiDotnet />,
+  "Firebase": <SiFirebase />,
+  "Git": <SiGit />,
+  "HTML": <SiHtml5 />,
+  "CSS": <SiCss3 />,
+  "TypeScript": <SiTypescript />,
+  "Node.js": <SiNodedotjs />,
+  "MongoDB": <SiMongodb />,
+  "MySQL": <SiMysql />,
+  "PostgreSQL": <SiPostgresql />,
+  "Docker": <SiDocker />,
+  "Figma": <SiFigma />
+};
 
 export default function Skills() {
+  const navigate = useNavigate();
+  const [skills, setSkills] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [roleId, setRoleId] = useState(null);
 
-  const skills = [
-    {
-      name: ".NET Core",
-      icon: <SiDotnet />,
-      category: "Backend",
-      level: "Expert",
-      favorite: true,
-    },
-    {
-      name: "React.js",
-      icon: <SiReact />,
-      category: "Frontend",
-      level: "Advanced",
-      favorite: true,
-    },
-    {
-      name: "JavaScript (ES6+)",
-      icon: <SiJavascript />,
-      category: "Frontend",
-      level: "Advanced",
-      favorite: true,
-    },
-    {
-      name: "Tailwind CSS",
-      icon: <SiTailwindcss />,
-      category: "Frontend",
-      level: "Intermediate",
-      favorite: false,
-    },
-    {
-      name: "Android (Kotlin)",
-      icon: <SiAndroid />,
-      category: "Mobile",
-      level: "Advanced",
-      favorite: false,
-    },
-    {
-      name: "Firebase",
-      icon: <SiFirebase />,
-      category: "Tools",
-      level: "Intermediate",
-      favorite: false,
-    },
-    {
-      name: "Git & GitHub",
-      icon: <SiGit />,
-      category: "Tools",
-      level: "Advanced",
-      favorite: true,
-    },
-  ];
+  useEffect(() => {
+    checkRole();
+    fetchSkills();
+  }, []);
+
+  const checkRole = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setRoleId(decoded.role || decoded.Role || decoded.RoleId || null);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const fetchSkills = async () => {
+    setLoading(true);
+    try {
+      const data = await getSkills();
+      const list = Array.isArray(data) ? data : (data.data || []);
+      setSkills(list);
+    } catch (error) {
+      console.error(error);
+      setSkills([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handlers
+  const handleAdd = () => {
+    navigate("/skills/add");
+  };
+
+  const handleEdit = (skill) => {
+    navigate(`/skills/edit/${skill.id}`);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus keahlian ini?")) {
+      try {
+        const token = localStorage.getItem("token");
+        await deleteSkill(id, token);
+        fetchSkills();
+      } catch (error) {
+        alert("Gagal menghapus");
+      }
+    }
+  };
 
   const favoriteSkills = skills.filter((s) => s.favorite);
   const otherSkills = skills.filter((s) => !s.favorite);
@@ -75,62 +98,93 @@ export default function Skills() {
 
       <div className="page-container">
         <div className="loby-right full">
-          <h1>Skills & Expertise</h1>
-          <p className="intro">
-            A detailed overview of my technical skills, proficiency levels,
-            and core technologies I frequently use in real-world projects.
-          </p>
-
-          <div className="skills-columns">
-            {/* LEFT - FAVORITE */}
-            <div className="skills-column">
-              <h3 className="column-title">
-                <FaStar className="star" /> Core Skills
-              </h3>
-
-              <div className="skills-grid">
-                {favoriteSkills.map((skill, index) => (
-                  <div className="skill-card highlight" key={index}>
-                    <div className="skill-header">
-                      <div className="skill-title">
-                        <span className="skill-icon">{skill.icon}</span>
-                        <h3>{skill.name}</h3>
-                      </div>
-                    </div>
-
-                    <span className="category">{skill.category}</span>
-                    <span className={`level ${skill.level.toLowerCase()}`}>
-                      {skill.level}
-                    </span>
-                  </div>
-                ))}
-              </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <h1>Keahlian & Teknologi</h1>
+              <p className="intro">
+                Kumpulan teknologi dan alat yang saya kuasai.
+              </p>
             </div>
-
-            {/* RIGHT - NON FAVORITE */}
-            <div className="skills-column">
-              <h3 className="column-title muted">Additional Skills</h3>
-
-              <div className="skills-grid">
-                {otherSkills.map((skill, index) => (
-                  <div className="skill-card" key={index}>
-                    <div className="skill-header">
-                      <div className="skill-title">
-                        <span className="skill-icon">{skill.icon}</span>
-                        <h3>{skill.name}</h3>
-                      </div>
-                    </div>
-
-                    <span className="category">{skill.category}</span>
-                    <span className={`level ${skill.level.toLowerCase()}`}>
-                      {skill.level}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {roleId == 1 && (
+              <button className="btn-primary" onClick={handleAdd}>
+                <FaPlus /> Tambah Keahlian
+              </button>
+            )}
           </div>
 
+          {loading ? (
+            <p style={{ textAlign: "center", color: "#aaa", marginTop: "2rem" }}>Memuat keahlian...</p>
+          ) : (
+            <div className="skills-columns">
+              {/* LEFT - FAVORITE */}
+              <div className="skills-column">
+                <h3 className="column-title">
+                  <FaStar className="star" /> Keahlian Utama
+                </h3>
+                <div className="skills-grid">
+                  {favoriteSkills.map((skill, index) => (
+                    <div className="skill-card highlight" key={skill.id || index} style={{ position: "relative" }}>
+                      {roleId == 1 && (
+                        <div className="action-btn-group" style={{ position: "absolute", top: "10px", right: "10px" }}>
+                          <button className="btn-edit" onClick={() => handleEdit(skill)}>
+                            <FaEdit />
+                          </button>
+                          <button className="btn-delete" onClick={() => handleDelete(skill.id)}>
+                            <FaTrash />
+                          </button>
+                        </div>
+                      )}
+
+                      <div className="skill-header">
+                        <div className="skill-title">
+                          <span className="skill-icon">{ICON_MAP[skill.iconName] || <SiReact />}</span>
+                          <h3>{skill.name}</h3>
+                        </div>
+                      </div>
+                      <span className="category">{skill.category}</span>
+                      <span className={`level ${skill.level.toLowerCase()}`}>
+                        {skill.level}
+                      </span>
+                    </div>
+                  ))}
+                  {favoriteSkills.length === 0 && <p style={{ color: "#666", fontStyle: "italic" }}>Belum ada keahlian utama.</p>}
+                </div>
+              </div>
+
+              {/* RIGHT - OTHERS */}
+              <div className="skills-column">
+                <h3 className="column-title muted">Keahlian Lainnya</h3>
+                <div className="skills-grid">
+                  {otherSkills.map((skill, index) => (
+                    <div className="skill-card" key={skill.id || index} style={{ position: "relative" }}>
+                      {roleId == 1 && (
+                        <div className="action-btn-group" style={{ position: "absolute", top: "10px", right: "10px" }}>
+                          <button className="btn-edit" onClick={() => handleEdit(skill)}>
+                            <FaEdit />
+                          </button>
+                          <button className="btn-delete" onClick={() => handleDelete(skill.id)}>
+                            <FaTrash />
+                          </button>
+                        </div>
+                      )}
+
+                      <div className="skill-header">
+                        <div className="skill-title">
+                          <span className="skill-icon">{ICON_MAP[skill.iconName] || <SiReact />}</span>
+                          <h3>{skill.name}</h3>
+                        </div>
+                      </div>
+                      <span className="category">{skill.category}</span>
+                      <span className={`level ${skill.level.toLowerCase()}`}>
+                        {skill.level}
+                      </span>
+                    </div>
+                  ))}
+                  {otherSkills.length === 0 && <p style={{ color: "#666", fontStyle: "italic" }}>Belum ada data.</p>}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

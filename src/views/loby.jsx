@@ -1,19 +1,63 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import TopActions from "../views/components/top-actions.jsx";
 import { FaBriefcase, FaCode, FaProjectDiagram, FaUserTie } from "react-icons/fa";
+import { getExperiences } from "../api/api";
 import "../css/loby.css";
 
 export default function Loby() {
   const navigate = useNavigate();
+  const [experiences, setExperiences] = useState([]);
+  const [totalYears, setTotalYears] = useState(0);
 
   const token = localStorage.getItem("token");
-  if (!token) {
-    return null; // AuthGuard will handle redirect
-  }
+  // AuthGuard usually handles redirect, but early return here is safe
+  if (!token) return null;
 
   const decoded = jwtDecode(token);
   const username = decoded.username || decoded.Name || "Tamu";
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      // Fetch specifically for this user context
+      const result = await getExperiences(1, 100, token); // Fetch enough to calc stats
+
+      let list = [];
+      if (result && Array.isArray(result.data.data)) {
+        list = result.data.data;
+      } else if (Array.isArray(result)) {
+        list = result;
+      }
+
+      setExperiences(list);
+      calculateTotalYears(list);
+    } catch (error) {
+      console.error("Failed to fetch dashboard data", error);
+    }
+  };
+
+  const calculateTotalYears = (list) => {
+    let totalms = 0;
+    list.forEach(exp => {
+      const start = new Date(exp.startDate).getTime();
+      const end = exp.endDate ? new Date(exp.endDate).getTime() : new Date().getTime();
+      if (!isNaN(start) && !isNaN(end)) {
+        totalms += (end - start);
+      }
+    });
+
+    // Convert ms to years (approx)
+    const years = totalms / (1000 * 60 * 60 * 24 * 365.25);
+    setTotalYears(Math.max(1, Math.floor(years))); // Floor to nearest, min 1 for show
+  };
+
+  // Get top 3 recent for summary
+  const recentExperiences = experiences.slice(0, 3);
 
   return (
     <section className="loby">
@@ -39,7 +83,7 @@ export default function Loby() {
             </div>
             <div className="stat-info">
               <h3>Pengalaman</h3>
-              <p>1+ Tahun</p>
+              <p>{totalYears}+ Tahun</p>
             </div>
           </div>
           <div className="stat-card">
@@ -86,29 +130,23 @@ export default function Loby() {
 
             <div className="content-card">
               <h2>Ringkasan Pengalaman</h2>
-              <ul className="list-experience">
-                <li>
-                  <span className="bullet">✔</span>
-                  <div>
-                    <strong>Frontend Developer</strong>
-                    <br /> Membangun antarmuka responsif dengan React & Tailwind.
-                  </div>
-                </li>
-                <li>
-                  <span className="bullet">✔</span>
-                  <div>
-                    <strong>Android Developer</strong>
-                    <br /> Pengembangan aplikasi native menggunakan Kotlin & Firebase.
-                  </div>
-                </li>
-                <li>
-                  <span className="bullet">✔</span>
-                  <div>
-                    <strong>Backend Engineer</strong>
-                    <br /> Merancang REST API yang aman dengan .NET Core.
-                  </div>
-                </li>
-              </ul>
+              {/* Dynamic Experience List */}
+              {experiences.length > 0 ? (
+                <ul className="list-experience">
+                  {recentExperiences.map((exp, i) => (
+                    <li key={i}>
+                      <span className="bullet">✔</span>
+                      <div>
+                        <strong>{exp.title || exp.role}</strong>
+                        <br /> {exp.company}
+                        {/* Optional: Add brief date or tech if desired */}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p style={{ color: "#aaa", fontStyle: "italic" }}>Belum ada data pengalaman.</p>
+              )}
             </div>
           </div>
 

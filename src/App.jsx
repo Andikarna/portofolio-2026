@@ -20,6 +20,11 @@ import Project from "./views/page/project.jsx";
 import Article from "./views/page/article.jsx";
 import ArticleDetail from "./views/page/article-detail.jsx";
 import ProjectDetail from "./views/page/project-detail.jsx";
+import ExperienceForm from "./views/page/experience-form.jsx";
+import ExperienceDetail from "./views/page/experience-detail.jsx";
+import SkillsForm from "./views/page/skills-form.jsx";
+import ProjectForm from "./views/page/project-form.jsx";
+import ArticleForm from "./views/page/article-form.jsx";
 
 function App() {
   const navigate = useNavigate();
@@ -83,16 +88,25 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} /> {/* optional */}
+        <Route path="/home" element={<Home />} />
         <Route path="/user" element={<GetUserView />} />
         <Route path="/form" element={<Form />} />
         <Route path="/register" element={<Register />} />
         <Route path="/loby" element={<AuthGuard><Loby /></AuthGuard>} />
         <Route path="/experience" element={<AuthGuard><Experience /></AuthGuard>} />
+        <Route path="/experience/add" element={<AuthGuard><ExperienceForm /></AuthGuard>} />
+        <Route path="/experience/edit/:id" element={<AuthGuard><ExperienceForm /></AuthGuard>} />
+        <Route path="/experience/:id" element={<AuthGuard><ExperienceDetail /></AuthGuard>} />
         <Route path="/skills" element={<AuthGuard><Skills /></AuthGuard>} />
+        <Route path="/skills/add" element={<AuthGuard><SkillsForm /></AuthGuard>} />
+        <Route path="/skills/edit/:id" element={<AuthGuard><SkillsForm /></AuthGuard>} />
         <Route path="/project" element={<AuthGuard><Project /></AuthGuard>} />
+        <Route path="/project/add" element={<AuthGuard><ProjectForm /></AuthGuard>} />
+        <Route path="/project/edit/:id" element={<AuthGuard><ProjectForm /></AuthGuard>} />
         <Route path="/project/:id" element={<AuthGuard><ProjectDetail /></AuthGuard>} />
         <Route path="/article" element={<AuthGuard><Article /></AuthGuard>} />
+        <Route path="/article/add" element={<AuthGuard><ArticleForm /></AuthGuard>} />
+        <Route path="/article/edit/:id" element={<AuthGuard><ArticleForm /></AuthGuard>} />
         <Route path="/article/:id" element={<AuthGuard><ArticleDetail /></AuthGuard>} />
         <Route path="*" element={<Home />} /> {/* fallback */}
       </Routes>

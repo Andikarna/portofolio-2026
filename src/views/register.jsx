@@ -1,7 +1,7 @@
 // views/register.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { FaArrowLeft, FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { register as apiRegister } from "../api/api";
 import "../css/form.css";
 
@@ -12,6 +12,8 @@ export default function Register() {
     email: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -78,6 +80,7 @@ export default function Register() {
             style={{
               textAlign: "center",
               marginTop: "1rem",
+              marginBottom: "1rem",
               padding: "0.5rem 1rem",
               borderRadius: "12px",
               backgroundColor: status === 200 ? "rgba(79,70,229,0.1)" : "rgba(255,77,77,0.1)",
@@ -118,13 +121,24 @@ export default function Register() {
           <div className="input-wrapper">
             <FaLock />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Password"
               required
             />
+            {showPassword ? (
+              <FaEyeSlash
+                className="toggle-password"
+                onClick={() => setShowPassword(false)}
+              />
+            ) : (
+              <FaEye
+                className="toggle-password"
+                onClick={() => setShowPassword(true)}
+              />
+            )}
           </div>
 
           <div className="btn-group">

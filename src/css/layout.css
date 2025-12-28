@@ -130,3 +130,91 @@ nav div a {
   flex-direction: column;
   gap: 2rem;
 }
+
+/* ==========================
+   MODERN BUTTONS Global
+   ========================== */
+
+/* Primary Gradient Button (Add/Submit) */
+.btn-primary, .register-btn {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary:hover, .register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+  filter: brightness(1.1);
+}
+
+.btn-primary:active, .register-btn:active {
+  transform: translateY(0);
+}
+
+/* Action Icon Buttons (Edit/Delete) */
+.action-btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit, .btn-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.btn-edit {
+  background: rgba(79, 70, 229, 0.1);
+  color: #818cf8;
+  border-color: rgba(79, 70, 229, 0.2);
+}
+
+.btn-edit:hover {
+  background: #4f46e5;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.btn-delete {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.btn-delete:hover {
+  background: #ef4444;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* Small label variant for lists */
+.btn-edit.labeled, .btn-delete.labeled {
+  width: auto;
+  padding: 6px 14px;
+  height: auto;
+  font-size: 0.85rem;
+  font-weight: 600;
+  gap: 6px;
+}

@@ -69,3 +69,154 @@ export const refreshToken = async ({ token, refreshToken }) => {
   );
   return response.data;
 };
+
+// =========================================================================
+// CRUD: Experience, Skills, Projects, Articles
+// =========================================================================
+
+// EXPERIENCE
+export const getExperiences = async (page = 1, limit = 3, token) => {
+  const response = await api.get(`/Experience/GetList?page=${page}&limit=${limit}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  });
+  return response.data;
+};
+
+export const getExperienceById = async (id, token) => {
+  const response = await api.get(`/Experience/GetById?id=${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const createExperience = async (data, token) => {
+  const response = await api.post("/Experience/Create", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  });
+  return response.data;
+};
+
+export const updateExperience = async (id, data, token) => {
+  const response = await api.put(`/Experience/Update?id=${id}`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const deleteExperience = async (id, token) => {
+  const response = await api.delete(`/Experience/Delete?id=${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  });
+  return response.data;
+};
+
+// SKILLS
+export const getSkills = async () => {
+  const response = await api.get("/Skills");
+  return response.data;
+};
+
+export const getSkillById = async (id, token) => {
+  const response = await api.get(`/Skills/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const createSkill = async (data, token) => {
+  const response = await api.post("/Skills", data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const updateSkill = async (id, data, token) => {
+  const response = await api.put(`/Skills/${id}`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const deleteSkill = async (id, token) => {
+  const response = await api.delete(`/Skills/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+// PROJECTS
+export const getProjects = async () => {
+  const response = await api.get("/Project");
+  return response.data;
+};
+
+export const getProjectById = async (id, token) => {
+  const response = await api.get(`/Project/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const createProject = async (data, token) => {
+  const response = await api.post("/Project", data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const updateProject = async (id, data, token) => {
+  const response = await api.put(`/Project/${id}`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const deleteProject = async (id, token) => {
+  const response = await api.delete(`/Project/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+// ARTICLES
+export const getArticles = async () => {
+  const response = await api.get("/Article");
+  return response.data;
+};
+
+export const getArticleById = async (id, token) => {
+  const response = await api.get(`/Article/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const createArticle = async (data, token) => {
+  const response = await api.post("/Article", data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const updateArticle = async (id, data, token) => {
+  const response = await api.put(`/Article/${id}`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
+export const deleteArticle = async (id, token) => {
+  const response = await api.delete(`/Article/${id}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};

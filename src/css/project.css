@@ -8,6 +8,10 @@
 }
 
 .project-header {
+  width: 100%;
+}
+
+.project-header > div {
   max-width: 600px;
 }
 

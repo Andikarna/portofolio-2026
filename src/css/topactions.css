@@ -10,36 +10,54 @@
   flex-wrap: wrap;
 }
 
+/* Action Button Default (Glassmorphism) */
 .action-btn {
-  padding: 10px 22px;
-  border-radius: 14px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  
+  /* Glass Style */
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-/* Ghost button */
-.action-btn.ghost {
-  background: transparent;
-  border: 1px solid #374151;
-  color: #9ca3af;
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.action-btn.ghost:hover {
-  border-color: #ffffff;
-  color: #ffffff;
+.action-btn.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+  border-color: #6366f1;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
 }
 
-/* Primary button */
-.action-btn.primary {
-  background: #ffffff;
-  color: #000000;
-  border: none;
+/* Primary/Manage Button (Dashed/Special) */
+.action-btn.manage {
+  border: 1px dashed rgba(99, 102, 241, 0.5);
+  color: #818cf8;
 }
 
-.action-btn.primary:hover {
-  background: #e5e5e5;
+.action-btn.manage:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: #818cf8;
+  color: #fff;
+  transform: translateY(-2px);
 }
 
 /* Responsive */

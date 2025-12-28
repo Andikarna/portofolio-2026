@@ -1,11 +1,13 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaGithub, FaExternalLinkAlt, FaTools, FaCheckCircle, FaReact, FaNodeJs, FaPython, FaJava, FaAndroid, FaStripe, FaAws, FaDocker } from "react-icons/fa";
+import { FaArrowLeft, FaGithub, FaExternalLinkAlt, FaTools, FaCheckCircle, FaReact, FaNodeJs, FaPython, FaJava, FaAndroid, FaStripe, FaAws, FaDocker, FaCalendarAlt } from "react-icons/fa";
 import { SiPostgresql, SiTailwindcss, SiFirebase, SiRedux, SiTensorflow, SiKotlin } from "react-icons/si";
 import TopActions from "../components/top-actions.jsx";
-import { MOCK_PROJECTS } from "../../data/mock-projects";
+import { getProjectById } from "../../api/api";
 import "../../css/project.css";
 
 const getTechIcon = (tech) => {
+  if (!tech) return <FaTools />;
   const t = tech.toLowerCase();
   if (t.includes("react")) return <FaReact />;
   if (t.includes("node")) return <FaNodeJs />;
@@ -21,17 +23,51 @@ const getTechIcon = (tech) => {
   return <FaTools />;
 };
 
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+};
+
 export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const project = MOCK_PROJECTS.find((p) => p.id === parseInt(id));
+
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const data = await getProjectById(id, token);
+        setProject(data);
+      } catch (error) {
+        console.error("Error fetching project:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProject();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <section className="loby">
+        <TopActions />
+        <div className="loby-container" style={{ textAlign: "center", paddingTop: "5rem", color: "#aaa" }}>
+          <p>Memuat detail proyek...</p>
+        </div>
+      </section>
+    );
+  }
 
   if (!project) {
     return (
       <section className="loby">
         <TopActions />
-        <div className="page-container" style={{ textAlign: "center", paddingTop: "5rem" }}>
-          <h2>Proyek tidak ditemukan</h2>
+        <div className="loby-container" style={{ textAlign: "center", paddingTop: "5rem" }}>
+          <h2 style={{ color: "#fff" }}>Proyek tidak ditemukan</h2>
           <button className="back-btn" onClick={() => navigate("/project")}>
             Kembali ke Daftar
           </button>
@@ -40,28 +76,40 @@ export default function ProjectDetail() {
     );
   }
 
+  // Parse Tech Stack if it's a string (back compatibility)
+  const techStack = Array.isArray(project.techStack)
+    ? project.techStack
+    : (project.techStack ? project.techStack.split(',').map(t => t.trim()) : []);
+
   return (
     <section className="loby">
       <TopActions />
 
-      <div className="page-container">
-        <button className="back-link" onClick={() => navigate("/project")}>
+      <div className="loby-container">
+        <button
+          className="back-link"
+          onClick={() => navigate("/project")}
+          style={{ marginBottom: "1.5rem" }}
+        >
           <FaArrowLeft /> Kembali ke Projects
         </button>
 
         <article className="project-detail-container">
           {/* HERO IMAGE */}
           <div className="detail-image-wrapper">
-            <img src={project.image} alt={project.title} className="detail-hero-image" />
+            <img src={project.image || "https://via.placeholder.com/800x400"} alt={project.title} className="detail-hero-image" />
             <div className="detail-overlay"></div>
           </div>
 
           <div className="detail-header-content">
             <div className="badge-row">
-              <span className={`status-badge ${project.status === "On Going" ? "ongoing" : "completed"}`}>
-                {project.status}
+              <span className={`status-badge ${project.status === "ongoing" ? "ongoing" : "completed"}`}>
+                {project.status === "ongoing" ? "Sedang Berjalan" : "Selesai"}
               </span>
-              <span className="period-badge">{project.period}</span>
+              <span className="period-badge">
+                <FaCalendarAlt style={{ marginRight: "6px" }} />
+                {formatDate(project.startDate)} - {project.status === "ongoing" ? "Sekarang" : formatDate(project.endDate)}
+              </span>
             </div>
 
             <h1 className="detail-title">{project.title}</h1>
@@ -72,18 +120,9 @@ export default function ProjectDetail() {
             <div className="detail-main">
               <section className="detail-section">
                 <h3>Tentang Proyek</h3>
-                <p className="detail-desc">{project.detailedDescription}</p>
-              </section>
-
-              <section className="detail-section">
-                <h3>Fitur Utama</h3>
-                <ul className="feature-list">
-                  {project.features.map((feature, idx) => (
-                    <li key={idx}>
-                      <FaCheckCircle className="check-icon" /> {feature}
-                    </li>
-                  ))}
-                </ul>
+                <p className="detail-desc" style={{ whiteSpace: "pre-line" }}>
+                  {project.description}
+                </p>
               </section>
             </div>
 
@@ -92,7 +131,7 @@ export default function ProjectDetail() {
               <div className="sidebar-card">
                 <h3>Teknologi</h3>
                 <div className="tech-tags">
-                  {project.technologies.map((tech, i) => (
+                  {techStack.map((tech, i) => (
                     <span key={i} className="tech-tag">
                       <span className="tech-icon">{getTechIcon(tech)}</span> {tech}
                     </span>
@@ -103,13 +142,13 @@ export default function ProjectDetail() {
               <div className="sidebar-card actions-card">
                 <h3>Links</h3>
                 <div className="detail-actions">
-                  {project.github && (
-                    <a href={project.github} target="_blank" rel="noreferrer" className="action-btn-lg github">
+                  {project.githubUrl && (
+                    <a href={project.githubUrl} target="_blank" rel="noreferrer" className="action-btn-lg github">
                       <FaGithub /> Repository
                     </a>
                   )}
-                  {project.demo && (
-                    <a href={project.demo} target="_blank" rel="noreferrer" className="action-btn-lg demo">
+                  {project.demoUrl && (
+                    <a href={project.demoUrl} target="_blank" rel="noreferrer" className="action-btn-lg demo">
                       <FaExternalLinkAlt /> Live Demo
                     </a>
                   )}
