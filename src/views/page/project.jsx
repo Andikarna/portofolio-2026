@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import "../../css/project.css";
 import TopActions from "../components/top-actions.jsx";
-import { FaGithub, FaExternalLinkAlt, FaStar, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import Modal from "../components/modal.jsx";
+import { FaGithub, FaExternalLinkAlt, FaStar, FaPlus, FaEdit, FaTrash, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { getProjects, deleteProject } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -11,7 +12,14 @@ export default function Project() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+
   const [roleId, setRoleId] = useState(null);
+
+  // Modal State
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
   const ITEMS_PER_PAGE = 6;
 
   useEffect(() => {
@@ -34,11 +42,26 @@ export default function Project() {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const data = await getProjects();
-      const list = Array.isArray(data) ? data : (data.data || []);
+      const response = await getProjects();
+
+      // 1. Resolve the array from the response structure
+      let list = [];
+      if (Array.isArray(response)) {
+        list = response;
+      } else if (response && response.data && Array.isArray(response.data.items)) {
+        // Check for nested .data.items (common in paginated responses)
+        list = response.data.items;
+      } else if (response && Array.isArray(response.data)) {
+        list = response.data;
+      } else if (response && Array.isArray(response.items)) {
+        list = response.items;
+      } else if (response && Array.isArray(response.result)) {
+        list = response.result;
+      }
+
       setProjects(list);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to fetch projects:", error);
       setProjects([]);
     } finally {
       setLoading(false);
@@ -61,17 +84,40 @@ export default function Project() {
     navigate(`/project/edit/${project.id}`);
   };
 
-  const handleDelete = async (id, e) => {
+  const handleDelete = (id, e) => {
     e.stopPropagation();
-    if (window.confirm("Apakah Anda yakin ingin menghapus proyek ini?")) {
-      try {
-        const token = localStorage.getItem("token");
-        await deleteProject(id, token);
-        fetchProjects();
-      } catch (error) {
-        alert("Gagal menghapus");
-      }
+    setSelectedId(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedId) return;
+    try {
+      const token = localStorage.getItem("token");
+      await deleteProject(selectedId, token);
+      setShowDeleteModal(false);
+      setShowSuccessModal(true);
+      fetchProjects();
+    } catch (error) {
+      alert("Gagal menghapus");
+      setShowDeleteModal(false);
     }
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setSelectedId(null);
+  };
+
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+  };
+
+  const getImageSrc = (image) => {
+    if (!image) return "https://placehold.co/600x400/1f1f1f/FFF?text=No+Image";
+    if (image.startsWith("http") || image.startsWith("data:")) return image;
+    // Assume it's a raw base64 string, default to png (or jpeg, browser often handles detection if header is obscure, but explicit is better)
+    return `data:image/png;base64,${image}`;
   };
 
   return (
@@ -110,7 +156,7 @@ export default function Project() {
                   >
                     {/* IMAGE */}
                     <div className="project-image">
-                      <img src={project.image || "https://placehold.co/600x400/1f1f1f/FFF?text=No+Image"} alt={project.title} />
+                      <img src={getImageSrc(project.coverImageUrl)} alt={project.title} />
                       <span className={`status ${project.status === "On Going" ? "ongoing" : "completed"}`}>
                         {project.status === "On Going" ? "Sedang Berjalan" : "Selesai"}
                       </span>
@@ -152,6 +198,7 @@ export default function Project() {
               </div>
             )}
 
+
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="pagination">
@@ -163,6 +210,42 @@ export default function Project() {
           </>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={closeDeleteModal}
+        title="Konfirmasi Hapus"
+        actions={
+          <>
+            <button className="modal-btn cancel" onClick={closeDeleteModal}>
+              Batal
+            </button>
+            <button className="modal-btn confirm" onClick={confirmDelete}>
+              Hapus
+            </button>
+          </>
+        }
+      >
+        <p>Apakah Anda yakin ingin menghapus proyek ini? Tindakan ini tidak dapat dibatalkan.</p>
+      </Modal>
+
+      {/* Success Modal */}
+      <Modal
+        isOpen={showSuccessModal}
+        onClose={closeSuccessModal}
+        title="Berhasil"
+        actions={
+          <button className="modal-btn confirm" onClick={closeSuccessModal} style={{ background: "#10b981" }}>
+            OK
+          </button>
+        }
+      >
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem", textAlign: "center", padding: "1rem 0" }}>
+          <FaCheckCircle style={{ fontSize: "3rem", color: "#10b981" }} />
+          <p>Proyek berhasil dihapus.</p>
+        </div>
+      </Modal>
     </section>
   );
 }

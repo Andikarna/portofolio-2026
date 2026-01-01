@@ -35,11 +35,11 @@ export default function SkillsForm() {
 
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    title: "",
+    name: "",
     category: "Frontend",
     level: "Intermediate",
-    isFavorite: false,
-    image: ""
+    isFeatured: false,
+    iconUrl: ""
   });
 
   // Autocomplete State
@@ -68,11 +68,11 @@ export default function SkillsForm() {
       const data = await getSkillById(id, token);
       if (data) {
         setFormData({
-          title: data.title || "",
-          category: data.category || "Frontend",
-          level: data.level || "Intermediate",
-          isFavorite: data.isFavorite || false,
-          image: data.image || ""
+          name: data.data.name || data.data.title || "",
+          category: data.data.category || "Frontend",
+          level: data.data.level || "Intermediate",
+          isFeatured: data.data.isFeatured || data.data.isFavorite || false,
+          iconUrl: data.data.iconUrl || data.data.image || ""
         });
       }
     } catch (error) {
@@ -90,7 +90,7 @@ export default function SkillsForm() {
     setFormData(prev => ({ ...prev, [name]: finalValue }));
 
     // Autocomplete Logic
-    if (name === "title") {
+    if (name === "name") {
       if (value.length > 0) {
         const filtered = POPULAR_SKILLS.filter(skill =>
           skill.name.toLowerCase().includes(value.toLowerCase())
@@ -106,9 +106,9 @@ export default function SkillsForm() {
   const handleSelectSuggestion = (skill) => {
     setFormData(prev => ({
       ...prev,
-      title: skill.name,
+      name: skill.name,
       category: skill.category,
-      image: skill.image
+      iconUrl: skill.image
     }));
     setShowSuggestions(false);
   };
@@ -184,10 +184,10 @@ export default function SkillsForm() {
               <div className="form-group" style={{ position: "relative" }}>
                 <label className="form-label">Nama Keahlian</label>
                 <input
-                  type="text" name="title"
+                  type="text" name="name"
                   className="form-input"
                   placeholder="Contoh: React.js"
-                  value={formData.title} onChange={handleChange}
+                  value={formData.name} onChange={handleChange}
                   onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                   autoComplete="off"
                   required
@@ -268,26 +268,26 @@ export default function SkillsForm() {
               <div className="form-group">
                 <label className="form-label">URL Icon (Gambar)</label>
                 <input
-                  type="text" name="image"
+                  type="text" name="iconUrl"
                   className="form-input"
                   placeholder="https://example.com/icon.png"
-                  value={formData.image} onChange={handleChange}
+                  value={formData.iconUrl} onChange={handleChange}
                 />
-                {formData.image && (
+                {formData.iconUrl && (
                   <div style={{ marginTop: "1rem" }}>
                     <p className="form-label">Preview:</p>
-                    <img src={formData.image} alt="Preview" style={{ width: "48px", height: "48px", objectFit: "contain", background: "#333", borderRadius: "8px", padding: "4px" }} />
+                    <img src={formData.iconUrl} alt="Preview" style={{ width: "48px", height: "48px", objectFit: "contain", background: "#333", borderRadius: "8px", padding: "4px" }} />
                   </div>
                 )}
               </div>
 
               <div className="form-group" style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 <input
-                  type="checkbox" name="isFavorite" id="isFavorite"
-                  checked={formData.isFavorite} onChange={handleChange}
+                  type="checkbox" name="isFeatured" id="isFeatured"
+                  checked={formData.isFeatured} onChange={handleChange}
                   style={{ width: "20px", height: "20px", accentColor: "#6366f1" }}
                 />
-                <label htmlFor="isFavorite" style={{ color: "#fff", cursor: "pointer" }}>Tandai sebagai Favorit (Featured)</label>
+                <label htmlFor="isFeatured" style={{ color: "#fff", cursor: "pointer" }}>Tandai sebagai Favorit (Featured)</label>
               </div>
 
               <button

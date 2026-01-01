@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://andikarna-001-site1.ltempurl.com/api",
+  // baseURL: "https://andikarna-001-site1.ltempurl.com/api",
+  baseURL: "https://localhost:7086/api",
 });
 
 export const getUser = (token) =>
@@ -121,33 +122,33 @@ export const deleteExperience = async (id, token) => {
 
 // SKILLS
 export const getSkills = async () => {
-  const response = await api.get("/Skills");
+  const response = await api.get("/Skill/GetList");
   return response.data;
 };
 
 export const getSkillById = async (id, token) => {
-  const response = await api.get(`/Skills/${id}`, {
+  const response = await api.get(`/Skill/GetById?id=${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;
 };
 
 export const createSkill = async (data, token) => {
-  const response = await api.post("/Skills", data, {
+  const response = await api.post("/Skill/Create", data, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;
 };
 
 export const updateSkill = async (id, data, token) => {
-  const response = await api.put(`/Skills/${id}`, data, {
+  const response = await api.put(`/Skill/Update?id=${id}`, data, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;
 };
 
 export const deleteSkill = async (id, token) => {
-  const response = await api.delete(`/Skills/${id}`, {
+  const response = await api.delete(`/Skill/Delete?id=${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;
@@ -155,33 +156,33 @@ export const deleteSkill = async (id, token) => {
 
 // PROJECTS
 export const getProjects = async () => {
-  const response = await api.get("/Project");
+  const response = await api.get("/Project/GetList");
   return response.data;
 };
 
 export const getProjectById = async (id, token) => {
-  const response = await api.get(`/Project/${id}`, {
+  const response = await api.get(`/Project/GetById?id=${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;
 };
 
 export const createProject = async (data, token) => {
-  const response = await api.post("/Project", data, {
+  const response = await api.post("/Project/Create", data, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;
 };
 
 export const updateProject = async (id, data, token) => {
-  const response = await api.put(`/Project/${id}`, data, {
+  const response = await api.put(`/Project/Update?id=${id}`, data, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;
 };
 
 export const deleteProject = async (id, token) => {
-  const response = await api.delete(`/Project/${id}`, {
+  const response = await api.delete(`/Project/Delete?id=${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;

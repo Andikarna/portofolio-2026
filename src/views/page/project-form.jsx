@@ -36,7 +36,7 @@ export default function ProjectForm() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
-    excerpt: "",
+    summary: "", // Renaming excerpt to summary to match backend
     description: "",
     image: "",
     githubUrl: "",
@@ -46,6 +46,7 @@ export default function ProjectForm() {
     startDate: "",
     endDate: ""
   });
+  const [imageFile, setImageFile] = useState(null);
 
   // Tech Stack State
   const [techInput, setTechInput] = useState("");
@@ -74,25 +75,29 @@ export default function ProjectForm() {
       const token = localStorage.getItem("token");
       const data = await getProjectById(id, token);
       if (data) {
+        const project = data.data || data; // Handle wrapper
         setFormData({
-          title: data.title || "",
-          excerpt: data.excerpt || "",
-          description: data.description || "",
-          image: data.image || "",
-          githubUrl: data.githubUrl || "",
-          demoUrl: data.demoUrl || "",
-          status: data.status || "ongoing",
-          isFeatured: data.isFeatured || false,
-          startDate: data.startDate ? data.startDate.split('T')[0] : "",
-          endDate: data.endDate ? data.endDate.split('T')[0] : ""
+          title: project.title || "",
+          summary: project.summary || project.excerpt || "", // Map summary
+          description: project.description || "",
+          image: project.coverImageUrl || project.image || "",
+          githubUrl: project.repositoryUrl || project.githubUrl || "",
+          demoUrl: project.demoUrl || "",
+          status: project.status === "On Going" ? "ongoing" : (project.status === "Selesai" ? "completed" : "ongoing"),
+          isFeatured: project.isFeatured || false,
+          startDate: project.startDate ? project.startDate.split('T')[0] : "",
+          endDate: project.endDate ? project.endDate.split('T')[0] : ""
         });
 
         // Parse Tech Stack
-        if (Array.isArray(data.techStack)) {
-          setSelectedTech(data.techStack);
-        } else if (data.techStack && typeof data.techStack === 'string') {
-          setSelectedTech(data.techStack.split(",").map(t => t.trim()));
+        const techs = project.technologies || project.techStack;
+        if (Array.isArray(techs)) {
+          setSelectedTech(techs);
+        } else if (techs && typeof techs === 'string') {
+          setSelectedTech(techs.split(",").map(t => t.trim()));
         }
+
+
       }
     } catch (error) {
       console.error("Failed to fetch project", error);
@@ -108,13 +113,14 @@ export default function ProjectForm() {
     setFormData({ ...formData, [e.target.name]: value });
   };
 
-  // Handle Image Upload (Base64)
+  // Handle Image Upload (Preview + File)
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageFile(file); // Store raw file for upload
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData({ ...formData, image: reader.result });
+        setFormData({ ...formData, image: reader.result }); // Preview
       };
       reader.readAsDataURL(file);
     }
@@ -181,14 +187,47 @@ export default function ProjectForm() {
     setLoading(true);
     const token = localStorage.getItem("token");
 
-    const payload = {
-      ...formData,
-      techStack: selectedTech,
-      endDate: formData.status === "ongoing" ? null : formData.endDate // Clear end date if ongoing
-    };
+    // Create FormData for standard multipart/form-data request
+    const payload = new FormData();
+    payload.append("Title", formData.title);
+    payload.append("Summary", formData.summary);
+    payload.append("Description", formData.description);
+    payload.append("RepositoryUrl", formData.githubUrl);
+    payload.append("DemoUrl", formData.demoUrl);
+
+    // Map status to backend expected values
+    // Assuming backend expects "On Going" and "Selesai" based on the curl and view logic
+    const statusValue = formData.status === "ongoing" ? "On Going" : "Selesai";
+    payload.append("Status", statusValue);
+
+    payload.append("StartDate", formData.startDate);
+    if (statusValue === "Selesai" && formData.endDate) {
+      payload.append("EndDate", formData.endDate);
+    }
+
+    payload.append("IsFeatured", formData.isFeatured);
+    payload.append("Technologies", selectedTech.join(','));
+
+    // Handle Image
+    // If new file upload
+    if (imageFile) {
+      payload.append("ImageFile", imageFile);
+      payload.append("CoverImageUrl", "");
+    } else {
+      // If existing image (and it's not base64 i.e. it's a URL), send it as CoverImageUrl?
+      // Or just leave ImageFile empty.
+      // If formData.image is a URL we pass it.
+      const isUrl = formData.image && !formData.image.startsWith("data:");
+      payload.append("CoverImageUrl", isUrl ? formData.image : "");
+    }
 
     try {
       if (isEditing) {
+        // For update, we might need a different endpoint or the same approach.
+        // updateProject in api.js uses PUT. standard Put with FormData should work if backend supports it.
+        // If api.js updateProject sends JSON, we need to make sure axios detects FormData.
+        // Current api.js: await api.put(`/Project/${id}`, data, ...
+        // Axios handles FormData automatically.
         await updateProject(id, payload, token);
         showModal("Berhasil!", "Proyek berhasil diperbarui.", "success");
       } else {
@@ -411,10 +450,10 @@ export default function ProjectForm() {
               <div className="form-group">
                 <label className="form-label">Ringkasan (Excerpt)</label>
                 <textarea
-                  name="excerpt" rows="3"
+                  name="summary" rows="3"
                   className="form-textarea"
                   placeholder="Deskripsi singkat untuk kartu depan..."
-                  value={formData.excerpt} onChange={handleChange} required
+                  value={formData.summary} onChange={handleChange} required
                 ></textarea>
               </div>
 

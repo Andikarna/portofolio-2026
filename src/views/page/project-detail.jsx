@@ -23,6 +23,12 @@ const getTechIcon = (tech) => {
   return <FaTools />;
 };
 
+const getImageSrc = (image) => {
+  if (!image) return "https://placehold.co/800x400/1f1f1f/FFF?text=No+Image";
+  if (image.startsWith("http") || image.startsWith("data:")) return image;
+  return `data:image/png;base64,${image}`;
+};
+
 const formatDate = (dateString) => {
   if (!dateString) return "";
   const date = new Date(dateString);
@@ -41,7 +47,7 @@ export default function ProjectDetail() {
       try {
         const token = localStorage.getItem("token");
         const data = await getProjectById(id, token);
-        setProject(data);
+        setProject(data.data);
       } catch (error) {
         console.error("Error fetching project:", error);
       } finally {
@@ -76,10 +82,11 @@ export default function ProjectDetail() {
     );
   }
 
-  // Parse Tech Stack if it's a string (back compatibility)
-  const techStack = Array.isArray(project.techStack)
-    ? project.techStack
-    : (project.techStack ? project.techStack.split(',').map(t => t.trim()) : []);
+  // Parse Tech Stack handles "technologies" (csv) or "techStack" (array)
+  const rawTech = project.technologies || project.techStack;
+  const techStack = Array.isArray(rawTech)
+    ? rawTech
+    : (rawTech ? rawTech.split(',').map(t => t.trim()) : []);
 
   return (
     <section className="loby">
@@ -97,18 +104,18 @@ export default function ProjectDetail() {
         <article className="project-detail-container">
           {/* HERO IMAGE */}
           <div className="detail-image-wrapper">
-            <img src={project.image || "https://via.placeholder.com/800x400"} alt={project.title} className="detail-hero-image" />
+            <img src={getImageSrc(project.coverImageUrl || project.image)} alt={project.title} className="detail-hero-image" />
             <div className="detail-overlay"></div>
           </div>
 
           <div className="detail-header-content">
             <div className="badge-row">
-              <span className={`status-badge ${project.status === "ongoing" ? "ongoing" : "completed"}`}>
-                {project.status === "ongoing" ? "Sedang Berjalan" : "Selesai"}
+              <span className={`status-badge ${project.status === "On Going" || project.status === "ongoing" ? "ongoing" : "completed"}`}>
+                {project.status === "On Going" || project.status === "ongoing" ? "Sedang Berjalan" : "Selesai"}
               </span>
               <span className="period-badge">
                 <FaCalendarAlt style={{ marginRight: "6px" }} />
-                {formatDate(project.startDate)} - {project.status === "ongoing" ? "Sekarang" : formatDate(project.endDate)}
+                {formatDate(project.startDate)} - {project.status === "On Going" || project.status === "ongoing" ? "Sekarang" : formatDate(project.endDate)}
               </span>
             </div>
 
@@ -142,13 +149,13 @@ export default function ProjectDetail() {
               <div className="sidebar-card actions-card">
                 <h3>Links</h3>
                 <div className="detail-actions">
-                  {project.githubUrl && (
-                    <a href={project.githubUrl} target="_blank" rel="noreferrer" className="action-btn-lg github">
+                  {(project.repositoryUrl || project.githubUrl) && (
+                    <a href={project.repositoryUrl || project.githubUrl} target="_blank" rel="noreferrer" className="action-btn-lg github">
                       <FaGithub /> Repository
                     </a>
                   )}
-                  {project.demoUrl && (
-                    <a href={project.demoUrl} target="_blank" rel="noreferrer" className="action-btn-lg demo">
+                  {(project.demoUrl || project.demo) && (
+                    <a href={project.demoUrl || project.demo} target="_blank" rel="noreferrer" className="action-btn-lg demo">
                       <FaExternalLinkAlt /> Live Demo
                     </a>
                   )}
