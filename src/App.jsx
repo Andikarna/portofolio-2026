@@ -61,13 +61,12 @@ function App() {
 
     localStorage.removeItem("token");
     navigate("/form");
-  };
-
+  };APO
   return (
     <div className="app-bg">
       <nav>
         <div className="logo">
-          <Link to="/">&lt;/AK&gt;</Link>
+          <Link to="/">p&lt;/AK&gt;</Link>
         </div>
         <div>
           {!isLogin ? (
