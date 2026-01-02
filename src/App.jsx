@@ -61,7 +61,7 @@ function App() {
 
     localStorage.removeItem("token");
     navigate("/form");
-  };APO
+  };
   return (
     <div className="app-bg">
       <nav>
