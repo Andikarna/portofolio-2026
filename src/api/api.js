@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://andikarna-001-site1.ltempurl.com/api",
-  // baseURL: "https://localhost:7086/api",
+  // baseURL: "https://andikarna-001-site1.ltempurl.com/api",
+  baseURL: "https://localhost:7086/api",
 });
 
 export const getUser = (token) =>
@@ -189,34 +189,37 @@ export const deleteProject = async (id, token) => {
 };
 
 // ARTICLES
-export const getArticles = async () => {
-  const response = await api.get("/Article");
+export const getArticles = async (page = 1, limit = 10, search = "", token) => {
+  const searchParam = search ? `&search=${encodeURIComponent(search)}` : "";
+  const response = await api.get(`/Article/List?page=${page}&limit=${limit}${searchParam}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
   return response.data;
 };
 
 export const getArticleById = async (id, token) => {
-  const response = await api.get(`/Article/${id}`, {
+  const response = await api.get(`/Article/Detail/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;
 };
 
 export const createArticle = async (data, token) => {
-  const response = await api.post("/Article", data, {
+  const response = await api.post("/Article/Create", data, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;
 };
 
 export const updateArticle = async (id, data, token) => {
-  const response = await api.put(`/Article/${id}`, data, {
+  const response = await api.put(`/Article/Update/${id}`, data, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;
 };
 
 export const deleteArticle = async (id, token) => {
-  const response = await api.delete(`/Article/${id}`, {
+  const response = await api.delete(`/Article/Delete/${id}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
   return response.data;

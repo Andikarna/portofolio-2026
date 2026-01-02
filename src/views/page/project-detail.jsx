@@ -119,7 +119,7 @@ export default function ProjectDetail() {
               </span>
             </div>
 
-            <h1 className="detail-title">{project.title}</h1>
+            <h1 className="detail-title" style={{ fontSize: "1.8rem" }}>{project.title}</h1>
           </div>
 
           <div className="detail-body">
@@ -127,7 +127,7 @@ export default function ProjectDetail() {
             <div className="detail-main">
               <section className="detail-section">
                 <h3>Tentang Proyek</h3>
-                <p className="detail-desc" style={{ whiteSpace: "pre-line" }}>
+                <p className="detail-desc" style={{ whiteSpace: "pre-line", fontSize: "0.95rem" }}>
                   {project.description}
                 </p>
               </section>

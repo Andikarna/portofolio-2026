@@ -3,13 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import TopActions from "../views/components/top-actions.jsx";
 import { FaBriefcase, FaCode, FaProjectDiagram, FaUserTie } from "react-icons/fa";
-import { getExperiences } from "../api/api";
+import { getExperiences, getProjects, getSkills } from "../api/api";
 import "../css/loby.css";
 
 export default function Loby() {
   const navigate = useNavigate();
   const [experiences, setExperiences] = useState([]);
   const [totalYears, setTotalYears] = useState(0);
+  const [completedProjectCount, setCompletedProjectCount] = useState(0);
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+  const [topSkillsStr, setTopSkillsStr] = useState("-");
 
   const token = localStorage.getItem("token");
   // AuthGuard usually handles redirect, but early return here is safe
@@ -33,9 +36,40 @@ export default function Loby() {
       } else if (Array.isArray(result)) {
         list = result;
       }
-
       setExperiences(list);
       calculateTotalYears(list);
+
+      // Projects Stats
+      try {
+        const projData = await getProjects();
+        let pList = [];
+        if (Array.isArray(projData)) pList = projData;
+        else if (projData?.data?.items) pList = projData.data.items;
+        else if (Array.isArray(projData?.data)) pList = projData.data;
+
+        const completedProjects = pList.filter(p =>
+          p.status === 'Selesai' || p.status === 'completed' || p.status === 'Completed'
+        );
+        setCompletedProjectCount(completedProjects.length);
+        setFeaturedProjects(completedProjects.slice(0, 3));
+      } catch (err) { console.error(err); }
+
+      // Skills Stats
+      try {
+        const skillData = await getSkills();
+        let sList = [];
+        if (Array.isArray(skillData)) sList = skillData;
+        else if (skillData?.data?.items) sList = skillData.data.items;
+        else if (Array.isArray(skillData?.data)) sList = skillData.data;
+
+        const favs = sList
+          .filter(s => s.isFeatured || s.isFavorite || s.favorite)
+          .slice(0, 2)
+          .map(s => s.name || s.title)
+          .join(", ");
+        setTopSkillsStr(favs || "-");
+      } catch (err) { console.error(err); }
+
     } catch (error) {
       console.error("Failed to fetch dashboard data", error);
     }
@@ -92,7 +126,7 @@ export default function Loby() {
             </div>
             <div className="stat-info">
               <h3>Proyek Selesai</h3>
-              <p>15+ Proyek</p>
+              <p>{completedProjectCount} Proyek</p>
             </div>
           </div>
           <div className="stat-card">
@@ -101,7 +135,7 @@ export default function Loby() {
             </div>
             <div className="stat-info">
               <h3>Stack Utama</h3>
-              <p>React, .NET</p>
+              <p>{topSkillsStr}</p>
             </div>
           </div>
           <div className="stat-card">
@@ -110,7 +144,7 @@ export default function Loby() {
             </div>
             <div className="stat-info">
               <h3>Peran</h3>
-              <p>Fullstack Dev</p>
+              <p>Software Engineer</p>
             </div>
           </div>
         </div>
@@ -158,27 +192,32 @@ export default function Loby() {
                 <button className="view-all-btn" onClick={() => navigate("/project")}>Lihat Semua</button>
               </div>
               <div className="project-list">
-                <div className="project-item">
-                  <div className="project-icon mobile">📱</div>
-                  <div className="project-details">
-                    <h4>Aplikasi Mobile AI</h4>
-                    <p>Klasifikasi Gambar & Streaming</p>
-                  </div>
-                </div>
-                <div className="project-item">
-                  <div className="project-icon web">🌐</div>
-                  <div className="project-details">
-                    <h4>E-commerce UMKM</h4>
-                    <p>Platform Toko Online Tanaman</p>
-                  </div>
-                </div>
-                <div className="project-item">
-                  <div className="project-icon chat">💬</div>
-                  <div className="project-details">
-                    <h4>Realtime Chat</h4>
-                    <p>Aplikasi Pesan dengan Firebase</p>
-                  </div>
-                </div>
+                {featuredProjects.length > 0 ? (
+                  featuredProjects.map((proj, i) => (
+                    <div
+                      className="project-item"
+                      key={i}
+                      onClick={() => navigate(`/project/${proj.id}`)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <div className="project-icon web">
+                        {proj.coverImageUrl || proj.image ? (
+                          <img
+                            src={proj.coverImageUrl || proj.image}
+                            alt={proj.title}
+                            style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "8px" }}
+                          />
+                        ) : "🌐"}
+                      </div>
+                      <div className="project-details">
+                        <h4>{proj.title}</h4>
+                        <p>{proj.summary || (proj.description ? proj.description.substring(0, 40) + "..." : "No Project Summary")}</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p style={{ color: "#aaa", fontStyle: "italic", padding: "1rem" }}>Belum ada proyek selesai yang ditampilkan.</p>
+                )}
               </div>
             </div>
 

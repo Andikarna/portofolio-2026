@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createArticle, updateArticle, getArticleById } from "../../api/api";
-import { FaArrowLeft, FaSave, FaCloudUploadAlt, FaTimes, FaCalendarAlt } from "react-icons/fa";
+import { FaArrowLeft, FaSave, FaCloudUploadAlt, FaTimes, FaCalendarAlt, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import TopActions from "../components/top-actions.jsx";
 import Modal from "../components/modal.jsx";
 import "../../css/experience.css"; // Use shared styles
@@ -16,18 +16,32 @@ export default function ArticleForm() {
     title: "",
     date: "",
     excerpt: "",
-    tags: [], // Changed to array for multi-select
-    image: null // New field for Base64 image
+    tags: [],
+    image: null
   });
+  const [imageFile, setImageFile] = useState(null);
 
   const [tagInput, setTagInput] = useState("");
+
   const [modal, setModal] = useState({ isOpen: false, type: "success", message: "" });
+
+  const handleCloseModal = () => {
+    setModal({ ...modal, isOpen: false });
+    if (modal.type === "success") {
+      navigate("/article");
+    }
+  };
 
   useEffect(() => {
     if (isEditing) {
       fetchData();
     } else {
-      const today = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+      // Use local time for correct date
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const today = `${year}-${month}-${day}`;
       setFormData(prev => ({ ...prev, date: today }));
     }
   }, [id]);
@@ -36,14 +50,20 @@ export default function ArticleForm() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const data = await getArticleById(id, token);
+      const response = await getArticleById(id, token);
+      const data = response.data || response; // Handle if response is wrapped or not (based on sample: response.data)
+
       if (data) {
         setFormData({
           title: data.title || "",
-          date: data.date || "",
-          excerpt: data.excerpt || "",
-          tags: Array.isArray(data.tags) ? data.tags : (data.tags ? data.tags.split(",").map(t => t.trim()) : []),
-          image: data.image || null
+          date: data.publicationDate ? data.publicationDate.split("T")[0] : (data.date ? data.date.split("T")[0] : ""),
+          excerpt: data.content || data.excerpt || "",
+          tags: Array.isArray(data.tags)
+            ? data.tags
+            : (typeof data.tags === 'string' ? data.tags.split(",").map(t => t.trim()) : []),
+          image: (data.imageBase64 && !data.imageBase64.startsWith('data:image'))
+            ? `data:image/jpeg;base64,${data.imageBase64}`
+            : (data.imageBase64 || data.image || null)
         });
       }
     } catch (error) {
@@ -62,6 +82,7 @@ export default function ArticleForm() {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData(prev => ({ ...prev, image: reader.result }));
@@ -94,10 +115,36 @@ export default function ArticleForm() {
     setLoading(true);
     const token = localStorage.getItem("token");
 
-    const payload = {
-      ...formData,
-      tags: formData.tags // Ensure it's an array
-    };
+    const payload = new FormData();
+    payload.append("Title", formData.title);
+    payload.append("Content", formData.excerpt);
+    payload.append("PublicationDate", formData.date);
+
+    // Tags: Join with comma
+    if (formData.tags && formData.tags.length > 0) {
+      payload.append("Tags", formData.tags.join(","));
+    } else {
+      payload.append("Tags", "");
+    }
+
+    // ImageFile
+    if (imageFile) {
+      payload.append("ImageFile", imageFile);
+    }
+
+    // ImageBase64
+    if (formData.image && typeof formData.image === 'string' && formData.image.startsWith('data:')) {
+      payload.append("ImageBase64", formData.image);
+    } else {
+      // Prevent 500 crash by sending empty string
+      payload.append("ImageBase64", "");
+
+      // Try to preserve by sending URL if it exists
+      if (formData.image && !formData.image.startsWith("data:")) {
+        payload.append("Image", formData.image);
+        payload.append("CoverImageUrl", formData.image);
+      }
+    }
 
     try {
       if (isEditing) {
@@ -107,7 +154,7 @@ export default function ArticleForm() {
         await createArticle(payload, token);
         setModal({ isOpen: true, type: "success", message: "Artikel berhasil dibuat!" });
       }
-      setTimeout(() => navigate("/article"), 1500);
+      // Remove auto-redirect, wait for user to click OK
     } catch (error) {
       console.error("Save error", error);
       setModal({ isOpen: true, type: "error", message: "Gagal menyimpan artikel." });
@@ -122,10 +169,28 @@ export default function ArticleForm() {
 
       {modal.isOpen && (
         <Modal
-          type={modal.type}
-          message={modal.message}
-          onClose={() => setModal({ ...modal, isOpen: false })}
-        />
+          isOpen={modal.isOpen}
+          onClose={handleCloseModal}
+          title={modal.type === "success" ? "Berhasil" : "Gagal"}
+          actions={
+            <button
+              className="modal-btn confirm"
+              onClick={handleCloseModal}
+              style={{ background: modal.type === "success" ? "#10b981" : "#ef4444" }}
+            >
+              OK
+            </button>
+          }
+        >
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem", textAlign: "center", padding: "1rem 0" }}>
+            {modal.type === "success" ? (
+              <FaCheckCircle style={{ fontSize: "3rem", color: "#10b981" }} />
+            ) : (
+              <FaExclamationCircle style={{ fontSize: "3rem", color: "#ef4444" }} />
+            )}
+            <p>{modal.message}</p>
+          </div>
+        </Modal>
       )}
 
       <div className="loby-container">
@@ -231,9 +296,8 @@ export default function ArticleForm() {
                 <div className="input-with-icon">
                   <FaCalendarAlt className="input-icon" style={{ right: "10px", left: "auto", color: "#666" }} />
                   <input
-                    type="text" name="date"
+                    type="date" name="date"
                     className="form-input"
-                    placeholder="Contoh: 10 Oktober 2023"
                     value={formData.date} onChange={handleChange} required
                   />
                 </div>

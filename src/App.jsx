@@ -67,7 +67,7 @@ function App() {
     <div className="app-bg">
       <nav>
         <div className="logo">
-          <Link to="/">MyPortfolio</Link>
+          <Link to="/">&lt;/AK&gt;</Link>
         </div>
         <div>
           {!isLogin ? (
