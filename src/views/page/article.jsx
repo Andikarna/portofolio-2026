@@ -52,10 +52,8 @@ export default function Article() {
       if (data && data.data && Array.isArray(data.data.data)) {
         list = data.data.data.map(item => ({
           ...item,
-          image: (item.imageBase64 && !item.imageBase64.startsWith('data:image'))
-            ? `data:image/jpeg;base64,${item.imageBase64}`
-            : (item.imageBase64 || item.image),
-          date: item.publicationDate ? new Date(item.publicationDate).toLocaleDateString() : new Date().toLocaleDateString(),
+          image: item.imageBase64 || item.image,
+          date: item.publicationDate ? new Date(item.publicationDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
           excerpt: item.content ? item.content.substring(0, 100) + '...' : item.excerpt || "",
           tags: typeof item.tags === 'string' ? item.tags.split(',') : (item.tags || [])
         }));
@@ -69,10 +67,8 @@ export default function Article() {
       } else if (data && Array.isArray(data.data)) {
         list = data.data.map(item => ({
           ...item,
-          image: (item.imageBase64 && !item.imageBase64.startsWith('data:image'))
-            ? `data:image/jpeg;base64,${item.imageBase64}`
-            : (item.imageBase64 || item.image),
-          date: item.publicationDate ? new Date(item.publicationDate).toLocaleDateString() : new Date().toLocaleDateString(),
+          image: item.imageBase64 || item.image,
+          date: item.publicationDate ? new Date(item.publicationDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
           excerpt: item.content ? item.content.substring(0, 100) + '...' : item.excerpt || "",
           tags: typeof item.tags === 'string' ? item.tags.split(',') : (item.tags || [])
         }));
@@ -145,6 +141,12 @@ export default function Article() {
     alert("Link artikel berhasil disalin!");
   };
 
+  const getImageSrc = (image) => {
+    if (!image) return "https://placehold.co/600x400/1f1f1f/FFF?text=No+Image";
+    if (image.startsWith("http") || image.startsWith("data:")) return image;
+    return `data:image/png;base64,${image}`;
+  };
+
   return (
     <section className="loby">
       <TopActions />
@@ -190,13 +192,7 @@ export default function Article() {
                     style={{ cursor: "pointer", position: "relative" }}
                   >
                     {/* COVER IMAGE */}
-                    {article.image ? (
-                      <img src={article.image} alt={article.title} className="article-image-preview" />
-                    ) : (
-                      <div className="article-image-preview" style={{ background: "linear-gradient(45deg, #1f1f1f, #2d2d2d)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <span style={{ fontSize: "2rem", opacity: 0.2 }}>📝</span>
-                      </div>
-                    )}
+                    <img src={getImageSrc(article.image)} alt={article.title} className="article-image-preview" />
 
                     <div className="article-card-content">
                       <div className="article-meta" style={{ marginBottom: "0" }}>

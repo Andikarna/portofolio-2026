@@ -99,13 +99,13 @@ export default function ProjectDetail() {
           onClick={() => navigate("/project")}
           style={{ marginBottom: "1.5rem" }}
         >
-          <FaArrowLeft /> Kembali ke Projects
+          <FaArrowLeft /> Kembali
         </button>
 
         <article className="project-detail-container">
           {/* HERO IMAGE */}
           <div className="detail-image-wrapper" onClick={() => setShowImageModal(true)}>
-            <img src={getImageSrc(project.coverImageUrl || project.image)} alt={project.title} className="detail-hero-image" />
+            <img src={getImageSrc(project.imageBase64 || project.coverImageUrl || project.image)} alt={project.title} className="detail-hero-image" />
             <div className="detail-overlay"></div>
             <div className="expand-overlay">
               <FaExpand style={{ color: "#fff", fontSize: "1.5rem" }} />
@@ -194,7 +194,7 @@ export default function ProjectDetail() {
             </button>
 
             <img
-              src={getImageSrc(project.coverImageUrl || project.image)}
+              src={getImageSrc(project.imageBase64 || project.coverImageUrl || project.image)}
               alt={project.title}
               style={{
                 maxWidth: "100%", maxHeight: "100%",

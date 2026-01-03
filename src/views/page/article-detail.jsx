@@ -27,9 +27,7 @@ export default function ArticleDetail() {
         if (data) {
           const processedArticle = {
             ...data,
-            image: (data.imageBase64 && !data.imageBase64.startsWith('data:image'))
-              ? `data:image/jpeg;base64,${data.imageBase64}`
-              : (data.imageBase64 || data.image),
+            image: data.imageBase64 || data.image,
             date: data.publicationDate
               ? new Date(data.publicationDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
               : (data.date ? new Date(data.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })),
@@ -87,6 +85,12 @@ export default function ArticleDetail() {
     ? article.tags
     : (article.tags ? article.tags.split(',').map(t => t.trim()) : []);
 
+  const getImageSrc = (image) => {
+    if (!image) return "https://placehold.co/800x400/1f1f1f/FFF?text=No+Image";
+    if (image.startsWith("http") || image.startsWith("data:")) return image;
+    return `data:image/png;base64,${image}`;
+  };
+
   return (
     <section className="loby">
       <TopActions />
@@ -103,19 +107,17 @@ export default function ArticleDetail() {
         <article className="article-detail-card" style={{ padding: "0", overflow: "hidden" }}>
 
           {/* Hero Image */}
-          {article.image && (
-            <div style={{ width: "100%", height: "350px", position: "relative" }}>
-              <img
-                src={article.image}
-                alt={article.title}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-              <div style={{
-                position: "absolute", inset: 0,
-                background: "linear-gradient(to bottom, transparent 0%, rgba(31,31,31,1) 100%)"
-              }}></div>
-            </div>
-          )}
+          <div style={{ width: "100%", height: "350px", position: "relative" }}>
+            <img
+              src={getImageSrc(article.image)}
+              alt={article.title}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+            <div style={{
+              position: "absolute", inset: 0,
+              background: "linear-gradient(to bottom, transparent 0%, rgba(31,31,31,1) 100%)"
+            }}></div>
+          </div>
 
           <div style={{ padding: "3rem" }}>
             <header className="detail-header">
