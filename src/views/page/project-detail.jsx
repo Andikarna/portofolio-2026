@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaGithub, FaExternalLinkAlt, FaTools, FaCheckCircle, FaReact, FaNodeJs, FaPython, FaJava, FaAndroid, FaStripe, FaAws, FaDocker, FaCalendarAlt } from "react-icons/fa";
+import { FaArrowLeft, FaGithub, FaExternalLinkAlt, FaTools, FaCheckCircle, FaReact, FaNodeJs, FaPython, FaJava, FaAndroid, FaStripe, FaAws, FaDocker, FaCalendarAlt, FaExpand, FaTimes } from "react-icons/fa";
 import { SiPostgresql, SiTailwindcss, SiFirebase, SiRedux, SiTensorflow, SiKotlin } from "react-icons/si";
 import TopActions from "../components/top-actions.jsx";
 import { getProjectById } from "../../api/api";
@@ -41,6 +41,7 @@ export default function ProjectDetail() {
 
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -103,9 +104,12 @@ export default function ProjectDetail() {
 
         <article className="project-detail-container">
           {/* HERO IMAGE */}
-          <div className="detail-image-wrapper">
+          <div className="detail-image-wrapper" onClick={() => setShowImageModal(true)}>
             <img src={getImageSrc(project.coverImageUrl || project.image)} alt={project.title} className="detail-hero-image" />
             <div className="detail-overlay"></div>
+            <div className="expand-overlay">
+              <FaExpand style={{ color: "#fff", fontSize: "1.5rem" }} />
+            </div>
           </div>
 
           <div className="detail-header-content">
@@ -115,7 +119,7 @@ export default function ProjectDetail() {
               </span>
               <span className="period-badge">
                 <FaCalendarAlt style={{ marginRight: "6px" }} />
-                {formatDate(project.startDate)} - {project.status === "On Going" || project.status === "ongoing" ? "Sekarang" : formatDate(project.endDate)}
+                {formatDate(project.startDate)}
               </span>
             </div>
 
@@ -165,6 +169,43 @@ export default function ProjectDetail() {
           </div>
         </article>
       </div>
-    </section>
+
+      {/* Full Image Modal */}
+      {
+        showImageModal && (
+          <div
+            style={{
+              position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+              background: "rgba(0,0,0,0.9)", zIndex: 1000,
+              display: "flex", justifyContent: "center", alignItems: "center",
+              padding: "2rem"
+            }}
+            onClick={() => setShowImageModal(false)}
+          >
+            <button
+              style={{
+                position: "absolute", top: "20px", right: "20px",
+                background: "transparent", border: "none", color: "#fff",
+                fontSize: "2rem", cursor: "pointer"
+              }}
+              onClick={() => setShowImageModal(false)}
+            >
+              <FaTimes />
+            </button>
+
+            <img
+              src={getImageSrc(project.coverImageUrl || project.image)}
+              alt={project.title}
+              style={{
+                maxWidth: "100%", maxHeight: "100%",
+                objectFit: "contain", borderRadius: "8px",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.5)"
+              }}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        )
+      }
+    </section >
   );
 }

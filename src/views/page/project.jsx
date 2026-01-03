@@ -11,7 +11,6 @@ export default function Project() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
 
   const [roleId, setRoleId] = useState(null);
 
@@ -20,7 +19,7 @@ export default function Project() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
-  const ITEMS_PER_PAGE = 6;
+
 
   useEffect(() => {
     checkRole();
@@ -68,12 +67,12 @@ export default function Project() {
     }
   };
 
-  const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const currentData = projects.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  // const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
+  // const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentData = projects;
 
-  const handlePrev = () => { if (currentPage > 1) setCurrentPage((p) => p - 1); };
-  const handleNext = () => { if (currentPage < totalPages) setCurrentPage((p) => p + 1); };
+  // const handlePrev = () => { if (currentPage > 1) setCurrentPage((p) => p - 1); };
+  // const handleNext = () => { if (currentPage < totalPages) setCurrentPage((p) => p + 1); };
 
   const handleAdd = () => {
     navigate("/project/add");
@@ -200,13 +199,7 @@ export default function Project() {
 
 
             {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="pagination">
-                <button className="page-btn" onClick={handlePrev} disabled={currentPage === 1}>Sebelumnya</button>
-                <span className="page-info">Halaman {currentPage} dari {totalPages}</span>
-                <button className="page-btn" onClick={handleNext} disabled={currentPage === totalPages}>Selanjutnya</button>
-              </div>
-            )}
+
           </>
         )}
       </div>

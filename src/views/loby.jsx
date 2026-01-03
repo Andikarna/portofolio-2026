@@ -47,11 +47,25 @@ export default function Loby() {
         else if (projData?.data?.items) pList = projData.data.items;
         else if (Array.isArray(projData?.data)) pList = projData.data;
 
-        const completedProjects = pList.filter(p =>
+        // Prioritize Featured, then Completed
+        let featuredAndCompleted = pList.filter(p =>
+          p.featured || p.status === 'Selesai' || p.status === 'On Going' || p.status === 'Completed'
+        );
+
+        // Sort by latest createdDate
+        featuredAndCompleted.sort((a, b) => {
+          const dateA = new Date(a.createdDate || a.createdAt || 0);
+          const dateB = new Date(b.createdDate || b.createdAt || 0);
+          return dateB - dateA; // Descending
+        });
+
+        // Count only completed for stats
+        const completedOnly = pList.filter(p =>
           p.status === 'Selesai' || p.status === 'completed' || p.status === 'Completed'
         );
-        setCompletedProjectCount(completedProjects.length);
-        setFeaturedProjects(completedProjects.slice(0, 3));
+
+        setCompletedProjectCount(completedOnly.length);
+        setFeaturedProjects(featuredAndCompleted.slice(0, 3));
       } catch (err) { console.error(err); }
 
       // Skills Stats
@@ -92,6 +106,12 @@ export default function Loby() {
 
   // Get top 3 recent for summary
   const recentExperiences = experiences.slice(0, 3);
+
+  const getImageSrc = (image) => {
+    if (!image) return "https://placehold.co/100x100/1f1f1f/FFF?text=No+Img";
+    if (image.startsWith("http") || image.startsWith("data:")) return image;
+    return `data:image/png;base64,${image}`;
+  };
 
   return (
     <section className="loby">
@@ -203,15 +223,18 @@ export default function Loby() {
                       <div className="project-icon web">
                         {proj.coverImageUrl || proj.image ? (
                           <img
-                            src={proj.coverImageUrl || proj.image}
+                            src={getImageSrc(proj.coverImageUrl || proj.image)}
                             alt={proj.title}
-                            style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "8px" }}
+                            style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "6px" }}
                           />
                         ) : "🌐"}
                       </div>
                       <div className="project-details">
                         <h4>{proj.title}</h4>
-                        <p>{proj.summary || (proj.description ? proj.description.substring(0, 40) + "..." : "No Project Summary")}</p>
+                        <p>{(() => {
+                          const txt = proj.summary || proj.description || "No Project Summary";
+                          return txt.length > 35 ? txt.substring(0, 35) + "..." : txt;
+                        })()}</p>
                       </div>
                     </div>
                   ))

@@ -156,7 +156,7 @@ export const deleteSkill = async (id, token) => {
 
 // PROJECTS
 export const getProjects = async () => {
-  const response = await api.get("/Project/GetList");
+  const response = await api.get("/Project/GetList?page=1&limit=100");
   return response.data;
 };
 
