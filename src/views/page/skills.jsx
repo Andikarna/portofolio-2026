@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaStar, FaPlus, FaEdit, FaTrash, FaCheckCircle, FaExclamationCircle, FaEllipsisV } from "react-icons/fa";
+import { FaStar, FaPlus, FaEdit, FaTrash, FaCheckCircle, FaExclamationCircle, FaEllipsisV, FaCode } from "react-icons/fa";
 import Modal from "../components/modal.jsx";
 import {
   SiReact, SiJavascript, SiTailwindcss, SiAndroid, SiDotnet, SiFirebase, SiGit,
@@ -271,7 +271,7 @@ export default function Skills() {
                             {skill.iconUrl && (skill.iconUrl.startsWith("http") || skill.iconUrl.startsWith("data:")) ? (
                               <img src={skill.iconUrl} alt={skill.name} style={{ width: "24px", height: "24px", objectFit: "contain" }} />
                             ) : (
-                              ICON_MAP[skill.name] || ICON_MAP[skill.iconUrl] || <SiReact />
+                              ICON_MAP[skill.name] || ICON_MAP[skill.iconUrl] || <FaCode />
                             )}
                           </span>
                           <h3>{skill.name}</h3>
@@ -379,7 +379,7 @@ export default function Skills() {
                             {skill.iconUrl && (skill.iconUrl.startsWith("http") || skill.iconUrl.startsWith("data:")) ? (
                               <img src={skill.iconUrl} alt={skill.name} style={{ width: "24px", height: "24px", objectFit: "contain" }} />
                             ) : (
-                              ICON_MAP[skill.name] || ICON_MAP[skill.iconUrl] || <SiReact />
+                              ICON_MAP[skill.name] || ICON_MAP[skill.iconUrl] || <FaCode />
                             )}
                           </span>
                           <h3>{skill.name}</h3>
