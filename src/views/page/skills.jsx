@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { FaStar, FaPlus, FaEdit, FaTrash, FaCheckCircle, FaExclamationCircle, FaEllipsisV, FaCode } from "react-icons/fa";
+import { FaStar, FaPlus, FaEdit, FaTrash, FaCheckCircle, FaExclamationCircle, FaEllipsisV, FaCode, FaHtml5, FaCss3Alt } from "react-icons/fa";
 import Modal from "../components/modal.jsx";
 import {
   SiReact, SiJavascript, SiTailwindcss, SiAndroid, SiDotnet, SiFirebase, SiGit,
-  SiHtml5, SiCss3, SiTypescript, SiNodedotjs, SiMongodb, SiMysql, SiPostgresql,
+  SiTypescript, SiNodedotjs, SiMongodb, SiMysql, SiPostgresql,
   SiDocker, SiFigma
 } from "react-icons/si";
 import TopActions from "../components/top-actions.jsx";
@@ -21,8 +21,8 @@ const ICON_MAP = {
   ".NET": <SiDotnet />,
   "Firebase": <SiFirebase />,
   "Git": <SiGit />,
-  "HTML": <SiHtml5 />,
-  "CSS": <SiCss3 />,
+  "HTML": <FaHtml5 />,
+  "CSS": <FaCss3Alt />,
   "TypeScript": <SiTypescript />,
   "Node.js": <SiNodedotjs />,
   "MongoDB": <SiMongodb />,
