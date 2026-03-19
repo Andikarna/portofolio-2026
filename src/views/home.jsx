@@ -23,9 +23,9 @@ export default function Home() {
           <button className="register-btn" onClick={() => navigate("/form")}>
             <FaUserPlus /> Mulai Jelajahi Aplikasi
           </button>
-          {/* <button className="guest-btn" onClick={() => navigate("/portfolio")}>
-            <FaDoorOpen /> Continue as Guest
-          </button> */}
+          <button className="guest-btn" onClick={() => navigate("/portofolio")}>
+            <FaDoorOpen /> Lihat Portofolio
+          </button>
         </div>
 
         {/* Optional: Skills or small highlights */}

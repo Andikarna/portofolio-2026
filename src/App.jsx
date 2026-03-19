@@ -6,6 +6,7 @@ import GetUserView from "./views/getusers.jsx";
 import Form from "./views/form.jsx";
 import Register from "./views/register.jsx";
 import Loby from "./views/loby.jsx";
+import Portofolio from "./views/portofolio.jsx";
 import { jwtDecode } from "jwt-decode";
 import { logout } from "./api/api.js";
 import AuthGuard from "./views/components/auth-guard.jsx";
@@ -88,6 +89,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/portofolio" element={<Portofolio />} />
         <Route path="/user" element={<GetUserView />} />
         <Route path="/form" element={<Form />} />
         <Route path="/register" element={<Register />} />
