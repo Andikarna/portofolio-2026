@@ -1,8 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://andikarna-001-site1.ltempurl.com/api",
+  // baseURL: "https://andikarna-001-site1.ltempurl.com/api",
   // baseURL: "https://localhost:7086/api",
+  baseURL: "http://andikarna.runasp.net/api",
+
 });
 
 export const getUser = (token) =>
