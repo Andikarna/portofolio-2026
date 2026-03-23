@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProjects } from "../api/api.js";
-import { 
-  FaArrowLeft, FaPhone, FaEnvelope, FaMapMarkerAlt, 
+import {
+  FaArrowLeft, FaPhone, FaEnvelope, FaMapMarkerAlt,
   FaGraduationCap, FaBriefcase, FaCode, FaBrain, FaExternalLinkAlt, FaGithub,
   FaPhp, FaReact, FaDatabase, FaWindows, FaTerminal, FaCheckCircle
 } from "react-icons/fa";
-import { 
-  SiDotnet, SiGo, SiNextdotjs, SiKotlin, 
-  SiMysql, SiPostgresql, SiXampp 
+import {
+  SiDotnet, SiGo, SiNextdotjs, SiKotlin,
+  SiMysql, SiPostgresql, SiXampp
 } from "react-icons/si";
 import photo from "../assets/logo.png";
 import "../css/portofolio.css";
@@ -31,8 +31,18 @@ export default function Portofolio() {
 
   const completedProjects = [
     {
+      id: "hc-7",
+      title: "AI Code Reviewer",
+      description: "Aplikasi cerdas berbasis AI untuk meninjau kualitas kode, memberikan saran optimasi performa, serta mendeteksi potensi bug secara otomatis menggunakan teknologi Gemini AI Pro.",
+      projectStatus: "Selesai",
+      githubUrl: "https://github.com/Andikarna/ai-code-review",
+      projectUrl: "https://ai-codes-review.netlify.app",
+      tools: ["NextJS", "Gemini AI Pro", "Tailwind CSS"],
+      coverImageUrl: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80&w=800"
+    },
+    {
       id: "hc-6",
-      title: "AI-Screening-App",
+      title: "AI Screening App",
       description: "Aplikasi berbasis AI untuk menyortir dan meninjau resume pelamar kerja secara otomatis dengan teknologi cerdas Gemini Pro.",
       projectStatus: "Selesai",
       githubUrl: "https://github.com/Andikarna/ai-recruitment-screening",
@@ -99,7 +109,7 @@ export default function Portofolio() {
       if (Array.isArray(projData)) pList = projData;
       else if (projData?.data?.items) pList = projData.data.items;
       else if (Array.isArray(projData?.data)) pList = projData.data;
-      
+
       setProjects([...completedProjects, ...pList]);
     } catch (error) {
       console.error("Error fetching projects:", error);
@@ -158,7 +168,7 @@ export default function Portofolio() {
           <h1 className="hero-name">Andi Karna</h1>
           <h2 className="hero-role">Software Developer</h2>
           <p className="hero-desc">
-            <b>Software Engineer</b> yang berfokus pada pengembangan lintas platform (Web, Mobile, & Cloud) berfundasi <i>Clean Architecture</i>. Teruji dalam <i>Full-Stack Development</i> (Frontend/Backend/REST API) sekaligus diandalkan dalam penerapan infrastruktur DevOps modern (CI/CD, Docker, Kubernetes). 
+            <b>Software Engineer</b> yang berfokus pada pengembangan lintas platform (Web, Mobile, & Cloud) berfundasi <i>Clean Architecture</i>. Teruji dalam <i>Full-Stack Development</i> (Frontend/Backend/REST API) sekaligus diandalkan dalam penerapan infrastruktur DevOps modern (CI/CD, Docker, Kubernetes).
             Seorang <i>problem-solver</i> adaptif pembangun kolaborasi tim yang solid.
           </p>
           <div className="hero-contact">
@@ -254,7 +264,7 @@ export default function Portofolio() {
           {/* EXPERIENCE SECTION */}
           <section className="portfolio-section fade-in-up" style={{ animationDelay: '0.5s' }}>
             <h3 className="section-title"><FaBriefcase /> Perjalanan Karir</h3>
-            
+
             <div className="timeline-item">
               <h4>Software Engineering</h4>
               <h5>PT Adi Data Informatika <span className="timeline-date">August 2024 - Sekarang</span></h5>
@@ -291,7 +301,7 @@ export default function Portofolio() {
           {/* RECENT PROJECTS SECTION (MOVED DOWN UNDER EXPERIENCE) */}
           <div className="projects-container fade-in-up" style={{ animationDelay: '0.6s' }}>
             <section className="portfolio-section" style={{ border: 'none', background: 'transparent', boxShadow: 'none', padding: '0', marginTop: '20px' }}>
-              
+
               <h3 className="section-title"><FaExternalLinkAlt /> Karya Unggulan (Featured)</h3>
               <p style={{ color: "var(--web-text-muted)", marginBottom: "30px", fontSize: "1.1rem" }}>
                 Beberapa karya sistem berstandar <i>Enterprise</i> hasil pengembangan yang telah diimplementasikan dalam skala produksi.
@@ -322,7 +332,7 @@ export default function Portofolio() {
               </div>
 
               <h3 className="section-title" style={{ marginTop: '60px' }}><FaExternalLinkAlt /> Koleksi Proyek Lainnya</h3>
-              
+
               {loading ? (
                 <div className="loading-state">Memuat portofolio proyek API...</div>
               ) : projects.length === 0 ? (
@@ -339,7 +349,7 @@ export default function Portofolio() {
                               ? proj.description.substring(0, 150) + "..."
                               : proj.description}
                           </p>
-                          
+
                           {proj.tools && proj.tools.length > 0 && (
                             <div className="project-tools" style={{ marginBottom: '15px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                               {proj.tools.map((tool, i) => (
@@ -370,17 +380,17 @@ export default function Portofolio() {
 
                   {totalPages > 1 && (
                     <div className="pagination">
-                      <button 
-                        onClick={() => paginate(currentPage - 1)} 
+                      <button
+                        onClick={() => paginate(currentPage - 1)}
                         disabled={currentPage === 1}
                         className="page-btn"
                       >
                         Prev
                       </button>
-                      
+
                       {[...Array(totalPages)].map((_, i) => (
-                        <button 
-                          key={i} 
+                        <button
+                          key={i}
                           onClick={() => paginate(i + 1)}
                           className={`page-btn ${currentPage === i + 1 ? 'active' : ''}`}
                         >
@@ -388,8 +398,8 @@ export default function Portofolio() {
                         </button>
                       ))}
 
-                      <button 
-                        onClick={() => paginate(currentPage + 1)} 
+                      <button
+                        onClick={() => paginate(currentPage + 1)}
                         disabled={currentPage === totalPages}
                         className="page-btn"
                       >
