@@ -18,6 +18,8 @@ export default function Portofolio() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedExp, setExpandedExp] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 3; // Menampilkan 3 item per halaman (sehingga 6 proyek = max 2 halaman)
 
   const toggleExp = (id) => {
     setExpandedExp(prev => prev === id ? null : id);
@@ -29,20 +31,34 @@ export default function Portofolio() {
 
   const completedProjects = [
     {
-      id: "hc-1",
-      title: "Laundry Application System",
-      description: "Aplikasi manajemen operasional laundry terintegrasi dari pencatatan transaksi hingga laporan pendapatan untuk klien di daerah Rajeg.",
+      id: "hc-6",
+      title: "AI-Screening-App",
+      description: "Aplikasi berbasis AI untuk menyortir dan meninjau resume pelamar kerja secara otomatis dengan teknologi cerdas Gemini Pro.",
       projectStatus: "Selesai",
-      githubUrl: "",
-      coverImageUrl: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800"
+      githubUrl: "https://github.com/Andikarna/ai-recruitment-screening",
+      projectUrl: "https://ai-screening-app.netlify.app/",
+      tools: ["NextJs", ".NET Framework", "MySQL", "Gemini AI Pro"],
+      coverImageUrl: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&q=80&w=800"
     },
     {
-      id: "hc-2",
-      title: "Daily Production Report",
-      description: "Sistem pelaporan harian produksi pada PT Aneka Komkar Utama untuk melacak efisiensi waktu dan metrik output pabrik secara real-time.",
+      id: "hc-5",
+      title: "Task Management API",
+      description: "RESTful API untuk manajemen tugas dengan fitur autentikasi JWT, role-based access control, dan dokumentasi terintegrasi.",
       projectStatus: "Selesai",
-      githubUrl: "",
-      coverImageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800"
+      githubUrl: "https://github.com/andikarna/task-api",
+      projectUrl: "https://api.taskmanager.com",
+      tools: ["Golang", "Gin", "PostgreSQL", "Docker"],
+      coverImageUrl: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      id: "hc-4",
+      title: "E-Commerce Plants with AI",
+      description: "Aplikasi E-commerce penjualan tanaman hias dengan fitur deteksi gambar pintar berbasis machine learning (AI) pada project capstone di Bangkit Academy.",
+      projectStatus: "Selesai",
+      githubUrl: "https://github.com/andikarna/ecommerce-ai",
+      projectUrl: "https://plant-ai.store",
+      tools: ["Kotlin", "Firebase", "TensorFlow Lite"],
+      coverImageUrl: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=800"
     },
     {
       id: "hc-3",
@@ -50,15 +66,29 @@ export default function Portofolio() {
       description: "Sistem report produksi metal di PT Sinar Metrindo Perkasa untuk memonitor aliran data material, proses produksi, hingga quality control.",
       projectStatus: "Selesai",
       githubUrl: "",
+      projectUrl: "#",
+      tools: ["C#", "Windows Forms", "MySQL"],
       coverImageUrl: "https://images.unsplash.com/photo-1531297172864-dd3b118b7cb6?auto=format&fit=crop&q=80&w=800"
     },
     {
-      id: "hc-4",
-      title: "E-Commerce Plants with AI",
-      description: "Aplikasi E-commerce penjualan tanaman hias dengan fitur deteksi gambar pintar berbasis machine learning (AI) pada project capstone di Bangkit Academy.",
+      id: "hc-2",
+      title: "Daily Production Report",
+      description: "Sistem pelaporan harian produksi pada PT Aneka Komkar Utama untuk melacak efisiensi waktu dan metrik output pabrik secara real-time.",
       projectStatus: "Selesai",
       githubUrl: "",
-      coverImageUrl: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=800"
+      projectUrl: "#",
+      tools: ["C#", "ASP.NET Core", "SQL Server"],
+      coverImageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      id: "hc-1",
+      title: "Laundry Application System",
+      description: "Aplikasi manajemen operasional laundry terintegrasi dari pencatatan transaksi hingga laporan pendapatan untuk klien di daerah Rajeg.",
+      projectStatus: "Selesai",
+      githubUrl: "",
+      projectUrl: "https://laundry-demo.app",
+      tools: ["PHP", "MySQL", "Bootstrap"],
+      coverImageUrl: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800"
     }
   ];
 
@@ -103,6 +133,14 @@ export default function Portofolio() {
       image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800"
     }
   ];
+
+  // Pagination logic
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+  const totalPages = Math.ceil(projects.length / projectsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="portfolio-container">
@@ -290,27 +328,75 @@ export default function Portofolio() {
               ) : projects.length === 0 ? (
                 <div className="empty-state">Belum ada proyek yang diluncurkan.</div>
               ) : (
-                <div className="project-list">
-                  {projects.map((proj, index) => (
-                    <div key={proj.id} className="project-list-item fade-in-up" style={{ animationDelay: `${0.6 + (index * 0.1)}s` }}>
-                      <div className="project-list-info">
-                        <h3>{proj.title}</h3>
-                        <p className="project-desc">
-                          {proj.description?.length > 100
-                            ? proj.description.substring(0, 100) + "..."
-                            : proj.description}
-                        </p>
-                        <div className="project-meta">
-                          <span className="project-status">{proj.projectStatus}</span>
-                          {proj.githubUrl && (
-                            <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" className="repo-link">
-                              <FaGithub /> Repository
-                            </a>
+                <div className="project-list-wrapper">
+                  <div className="project-list">
+                    {currentProjects.map((proj, index) => (
+                      <div key={proj.id} className="project-list-item fade-in-up" style={{ animationDelay: `${0.6 + (index * 0.1)}s` }}>
+                        <div className="project-list-info">
+                          <h3>{proj.title}</h3>
+                          <p className="project-desc">
+                            {proj.description?.length > 150
+                              ? proj.description.substring(0, 150) + "..."
+                              : proj.description}
+                          </p>
+                          
+                          {proj.tools && proj.tools.length > 0 && (
+                            <div className="project-tools" style={{ marginBottom: '15px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                              {proj.tools.map((tool, i) => (
+                                <span key={i} className="tool-badge">{tool}</span>
+                              ))}
+                            </div>
                           )}
+
+                          <div className="project-meta">
+                            <span className="project-status">{proj.projectStatus}</span>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                              {proj.projectUrl && (
+                                <a href={proj.projectUrl} target="_blank" rel="noopener noreferrer" className="repo-link">
+                                  <FaExternalLinkAlt /> Kunjungi
+                                </a>
+                              )}
+                              {proj.githubUrl && (
+                                <a href={proj.githubUrl} target="_blank" rel="noopener noreferrer" className="repo-link">
+                                  <FaGithub /> Repository
+                                </a>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
+                    ))}
+                  </div>
+
+                  {totalPages > 1 && (
+                    <div className="pagination">
+                      <button 
+                        onClick={() => paginate(currentPage - 1)} 
+                        disabled={currentPage === 1}
+                        className="page-btn"
+                      >
+                        Prev
+                      </button>
+                      
+                      {[...Array(totalPages)].map((_, i) => (
+                        <button 
+                          key={i} 
+                          onClick={() => paginate(i + 1)}
+                          className={`page-btn ${currentPage === i + 1 ? 'active' : ''}`}
+                        >
+                          {i + 1}
+                        </button>
+                      ))}
+
+                      <button 
+                        onClick={() => paginate(currentPage + 1)} 
+                        disabled={currentPage === totalPages}
+                        className="page-btn"
+                      >
+                        Next
+                      </button>
                     </div>
-                  ))}
+                  )}
                 </div>
               )}
             </section>
