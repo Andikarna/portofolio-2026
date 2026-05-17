@@ -4,7 +4,8 @@ import { getProjects } from "../api/api.js";
 import {
   FaArrowLeft, FaPhone, FaEnvelope, FaMapMarkerAlt,
   FaGraduationCap, FaBriefcase, FaCode, FaBrain, FaExternalLinkAlt, FaGithub,
-  FaPhp, FaReact, FaDatabase, FaWindows, FaTerminal, FaCheckCircle
+  FaPhp, FaReact, FaDatabase, FaWindows, FaTerminal, FaCheckCircle,
+  FaChevronLeft, FaChevronRight
 } from "react-icons/fa";
 import {
   SiDotnet, SiGo, SiNextdotjs, SiKotlin,
@@ -19,7 +20,9 @@ export default function Portofolio() {
   const [loading, setLoading] = useState(true);
   const [expandedExp, setExpandedExp] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 3; // Menampilkan 3 item per halaman (sehingga 6 proyek = max 2 halaman)
+  const [currentFeaturedPage, setCurrentFeaturedPage] = useState(1);
+  const projectsPerPage = 3; // Menampilkan 3 item per halaman
+  const featuredProjectsPerPage = 2; // Menampilkan 2 item unggulan per halaman
 
   const toggleExp = (id) => {
     setExpandedExp(prev => prev === id ? null : id);
@@ -127,6 +130,16 @@ export default function Portofolio() {
 
   const featuredProjects = [
     {
+      title: "SaaS Note",
+      description: "Aplikasi pencatatan (SaaS) komprehensif dan cerdas yang terintegrasi dengan Agentic AI.",
+      features: ["Autentikasi aman & realtime database dengan Supabase", "Pembuatan dan ringkasan catatan otomatis via Agentic AI", "Antarmuka modern responsif dengan Next.js & Tailwind CSS", "Performa tinggi dan SEO-friendly architecture"],
+      status: "Baru Rilis",
+      company: "Karya Pribadi",
+      image: "/project-saas-note.png",
+      githubUrl: "https://github.com/Andikarna/saas-note",
+      projectUrl: "https://saas-note.netlify.app/"
+    },
+    {
       title: "Enterprise Human Resource Management",
       description: "Applikasi berskala enterprise untuk HRIS komprehensif yang memusatkan data manajemen dan operasional SDM dalam perusahaan.",
       features: ["Autentikasi 2FA & Token JWT terenkripsi", "Manajemen Data & Rekam Jejak Employee", "Proses Perpanjangan Kontrak Otomatis", "Sistem Klaim Reimbursement Karyawan"],
@@ -144,13 +157,21 @@ export default function Portofolio() {
     }
   ];
 
-  // Pagination logic
+  // Pagination logic for Other Projects
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
   const totalPages = Math.ceil(projects.length / projectsPerPage);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Pagination logic for Featured Projects
+  const indexOfLastFeatured = currentFeaturedPage * featuredProjectsPerPage;
+  const indexOfFirstFeatured = indexOfLastFeatured - featuredProjectsPerPage;
+  const currentFeaturedList = featuredProjects.slice(indexOfFirstFeatured, indexOfLastFeatured);
+  const totalFeaturedPages = Math.ceil(featuredProjects.length / featuredProjectsPerPage);
+
+  const paginateFeatured = (pageNumber) => setCurrentFeaturedPage(pageNumber);
 
   return (
     <div className="portfolio-container">
@@ -308,7 +329,7 @@ export default function Portofolio() {
               </p>
 
               <div className="featured-projects">
-                {featuredProjects.map((fp, i) => (
+                {currentFeaturedList.map((fp, i) => (
                   <div key={i} className="featured-card">
                     <div className="fp-image-wrapper">
                       <img src={fp.image} alt={fp.title} className="fp-image" />
@@ -326,10 +347,58 @@ export default function Portofolio() {
                           <span key={idx} className="fp-feature"><FaCheckCircle /> {feat}</span>
                         ))}
                       </div>
+                      {(fp.githubUrl || fp.projectUrl) && (
+                        <div className="project-meta" style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px solid var(--web-border)' }}>
+                          <div style={{ display: 'flex', gap: '10px' }}>
+                            {fp.projectUrl && (
+                              <a href={fp.projectUrl} target="_blank" rel="noopener noreferrer" className="repo-link">
+                                <FaExternalLinkAlt /> Kunjungi
+                              </a>
+                            )}
+                            {fp.githubUrl && (
+                              <a href={fp.githubUrl} target="_blank" rel="noopener noreferrer" className="repo-link">
+                                <FaGithub /> Repository
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
+
+              {totalFeaturedPages > 1 && (
+                <div className="pagination fade-in-up" style={{ animationDelay: '0.8s', marginTop: '30px' }}>
+                  <button
+                    onClick={() => paginateFeatured(currentFeaturedPage - 1)}
+                    disabled={currentFeaturedPage === 1}
+                    className="page-btn nav-btn"
+                  >
+                    <FaChevronLeft /> Prev
+                  </button>
+
+                  <div className="page-numbers">
+                    {[...Array(totalFeaturedPages)].map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => paginateFeatured(i + 1)}
+                        className={`page-btn num-btn ${currentFeaturedPage === i + 1 ? 'active' : ''}`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => paginateFeatured(currentFeaturedPage + 1)}
+                    disabled={currentFeaturedPage === totalFeaturedPages}
+                    className="page-btn nav-btn"
+                  >
+                    Next <FaChevronRight />
+                  </button>
+                </div>
+              )}
 
               <h3 className="section-title" style={{ marginTop: '60px' }}><FaExternalLinkAlt /> Koleksi Proyek Lainnya</h3>
 
@@ -379,31 +448,33 @@ export default function Portofolio() {
                   </div>
 
                   {totalPages > 1 && (
-                    <div className="pagination">
+                    <div className="pagination fade-in-up" style={{ animationDelay: '1s' }}>
                       <button
                         onClick={() => paginate(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="page-btn"
+                        className="page-btn nav-btn"
                       >
-                        Prev
+                        <FaChevronLeft /> Prev
                       </button>
 
-                      {[...Array(totalPages)].map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => paginate(i + 1)}
-                          className={`page-btn ${currentPage === i + 1 ? 'active' : ''}`}
-                        >
-                          {i + 1}
-                        </button>
-                      ))}
+                      <div className="page-numbers">
+                        {[...Array(totalPages)].map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => paginate(i + 1)}
+                            className={`page-btn num-btn ${currentPage === i + 1 ? 'active' : ''}`}
+                          >
+                            {i + 1}
+                          </button>
+                        ))}
+                      </div>
 
                       <button
                         onClick={() => paginate(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="page-btn"
+                        className="page-btn nav-btn"
                       >
-                        Next
+                        Next <FaChevronRight />
                       </button>
                     </div>
                   )}
