@@ -56,4 +56,23 @@ export const MOCK_PROJECTS = [
     ],
     detailedDescription: "An innovative healthcare application leveraging computer vision to provide preliminary skin disease screening. The app analyzes skin lesions in real-time and provides a probability score for common conditions, helping users decide whether to seek professional medical advice. Achieved 92% accuracy in testing datasets."
   },
+  {
+    id: 4,
+    title: "SaaS Note",
+    description: "A comprehensive SaaS note-taking application using modern web technologies and AI.",
+    period: "May 2026",
+    image: "/project-saas-note.png",
+    status: "Completed",
+    featured: true,
+    github: "https://github.com/Andikarna/saas-note",
+    demo: "https://saas-note.netlify.app/",
+    technologies: ["Next.js", "Agentic AI", "Supabase", "Tailwind CSS"],
+    features: [
+      "Secure authentication and data storage with Supabase.",
+      "AI-powered note generation and organization.",
+      "Modern and responsive UI with Tailwind CSS.",
+      "Seamless deployment on Netlify."
+    ],
+    detailedDescription: "A powerful, AI-driven SaaS note-taking application built for modern workflows. Leverages Next.js for high performance and SEO, Agentic AI for intelligent note management, and Supabase for a robust backend. The platform provides a seamless user experience, allowing users to effortlessly create, organize, and securely store their thoughts."
+  }
 ];
