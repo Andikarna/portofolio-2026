@@ -34,6 +34,16 @@ export default function Portofolio() {
 
   const completedProjects = [
     {
+      id: "hc-8",
+      title: "PromptVault AI",
+      description: "Aplikasi premium untuk menyimpan, mengelola, melakukan versi, serta mengoptimalkan prompt AI yang terintegrasi secara langsung dengan sinkronisasi Google Sheets.",
+      projectStatus: "Selesai",
+      githubUrl: "https://github.com/Andikarna/promptvault-app",
+      projectUrl: "https://promptvault-app-peach.vercel.app",
+      tools: ["Next.js", "Tailwind CSS", "Google Sheets API"],
+      coverImageUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800"
+    },
+    {
       id: "hc-7",
       title: "AI Code Reviewer",
       description: "Aplikasi cerdas berbasis AI untuk meninjau kualitas kode, memberikan saran optimasi performa, serta mendeteksi potensi bug secara otomatis menggunakan teknologi Gemini AI Pro.",
