@@ -7,6 +7,7 @@ import Form from "./views/form.jsx";
 import Register from "./views/register.jsx";
 import Loby from "./views/loby.jsx";
 import Portofolio from "./views/portofolio.jsx";
+import FeaturedDetail from "./views/featured-detail.jsx";
 import { jwtDecode } from "jwt-decode";
 import { logout } from "./api/api.js";
 import AuthGuard from "./views/components/auth-guard.jsx";
@@ -90,6 +91,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/portofolio" element={<Portofolio />} />
+        <Route path="/portofolio/featured/:id" element={<FeaturedDetail />} />
         <Route path="/user" element={<GetUserView />} />
         <Route path="/form" element={<Form />} />
         <Route path="/register" element={<Register />} />

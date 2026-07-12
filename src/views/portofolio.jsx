@@ -5,7 +5,7 @@ import {
   FaArrowLeft, FaPhone, FaEnvelope, FaMapMarkerAlt,
   FaGraduationCap, FaBriefcase, FaCode, FaBrain, FaExternalLinkAlt, FaGithub,
   FaPhp, FaReact, FaDatabase, FaWindows, FaTerminal, FaCheckCircle,
-  FaChevronLeft, FaChevronRight
+  FaChevronLeft, FaChevronRight, FaImages
 } from "react-icons/fa";
 import {
   SiDotnet, SiGo, SiNextdotjs, SiKotlin,
@@ -13,6 +13,7 @@ import {
 } from "react-icons/si";
 import photo from "../assets/logo.png";
 import "../css/portofolio.css";
+import { FEATURED_PROJECTS } from "../data/featured-projects.js";
 
 export default function Portofolio() {
   const navigate = useNavigate();
@@ -22,12 +23,31 @@ export default function Portofolio() {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentFeaturedPage, setCurrentFeaturedPage] = useState(1);
   const projectsPerPage = 3; // Menampilkan 3 item per halaman
-  const featuredProjectsPerPage = 2; // Menampilkan 2 item unggulan per halaman
+  const featuredProjectsPerPage = 4; // Menampilkan 4 item unggulan per halaman
 
   const toggleExp = (id) => {
     setExpandedExp(prev => prev === id ? null : id);
   };
 
+  const [showAllFeaturedModal, setShowAllFeaturedModal] = useState(false);
+  const [glitchTitle, setGlitchTitle] = useState("Software Engineer");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGlitchTitle(prev => prev === "Software Engineer" ? "AI Native Engineer" : "Software Engineer");
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+  useEffect(() => {
+    if (showAllFeaturedModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showAllFeaturedModal]);
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -138,34 +158,7 @@ export default function Portofolio() {
     return "https://via.placeholder.com/400x300/1f1f1f/008080?text=No+Image";
   };
 
-  const featuredProjects = [
-    {
-      title: "SaaS Note",
-      description: "Aplikasi pencatatan (SaaS) komprehensif dan cerdas yang terintegrasi dengan Agentic AI.",
-      features: ["Autentikasi aman & realtime database dengan Supabase", "Pembuatan dan ringkasan catatan otomatis via Agentic AI", "Antarmuka modern responsif dengan Next.js & Tailwind CSS", "Performa tinggi dan SEO-friendly architecture"],
-      status: "Baru Rilis",
-      company: "Karya Pribadi",
-      image: "/project-saas-note.png",
-      githubUrl: "https://github.com/Andikarna/saas-note",
-      projectUrl: "https://saas-note.netlify.app/"
-    },
-    {
-      title: "Enterprise Human Resource Management",
-      description: "Applikasi berskala enterprise untuk HRIS komprehensif yang memusatkan data manajemen dan operasional SDM dalam perusahaan.",
-      features: ["Autentikasi 2FA & Token JWT terenkripsi", "Manajemen Data & Rekam Jejak Employee", "Proses Perpanjangan Kontrak Otomatis", "Sistem Klaim Reimbursement Karyawan"],
-      status: "Go-Live",
-      company: "PT Adidata Informatika",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      title: "Recruitment & Payroll System",
-      description: "Platform terintegrasi untuk proses rekrutmen kandidat end-to-end, manajemen interview bertahap, serta komputasi penggajian kompleks.",
-      features: ["Registrasi Dinamis & Progress Interview Bertahap", "Sistem Kalkulasi Payroll (Margin & Percent)", "Integrasi Mekari E-Sign untuk Kontrak", "Laporan Rekrutmen Terpadu"],
-      status: "Active since Early 2024",
-      company: "PT Adidata Informatika",
-      image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800"
-    }
-  ];
+  const featuredProjects = FEATURED_PROJECTS;
 
   // Pagination logic for Other Projects
   const indexOfLastProject = currentPage * projectsPerPage;
@@ -197,11 +190,15 @@ export default function Portofolio() {
         <div className="hero-content-wrapper">
           <img src={photo} alt="Andi Karna" className="hero-img" />
           <h1 className="hero-name">Andi Karna</h1>
-          <h2 className="hero-role">Software Developer</h2>
-          <p className="hero-desc">
-            <b>Software Engineer</b> yang berfokus pada pengembangan lintas platform (Web, Mobile, & Cloud) berfundasi <i>Clean Architecture</i>. Teruji dalam <i>Full-Stack Development</i> (Frontend/Backend/REST API) sekaligus diandalkan dalam penerapan infrastruktur DevOps modern (CI/CD, Docker, Kubernetes).
-            Seorang <i>problem-solver</i> adaptif pembangun kolaborasi tim yang solid.
-          </p>
+          <h2 className="hero-role glitch-text" data-text={glitchTitle}>{glitchTitle}</h2>
+          <div className="hero-desc" style={{ textAlign: 'center', maxWidth: '850px', marginTop: '20px', lineHeight: '1.8', color: 'var(--web-text-muted)', fontSize: '1.05rem' }}>
+            <p style={{ marginBottom: '20px', textAlign: 'center' }}>
+              Software Engineer yang bertransformasi menjadi AI Native Engineer, berfokus membangun aplikasi enterprise berbasis Artificial Intelligence. Berpengalaman dalam .NET dan Next.js, kini mendalami AI Agents, LLM, OpenSearch, Redis, CQRS, dan Event-Driven Architecture. Aktif mengeksplorasi Agentic AI, Semantic Search, serta Cloud & Modern Architecture untuk kebutuhan enterprise.
+            </p>
+            <p style={{ fontStyle: 'italic', color: 'var(--web-primary)', textAlign: 'center', marginTop: '30px', fontSize: '1.1rem' }}>
+              "Membangun software yang tidak hanya berjalan, tetapi juga mampu berpikir dan memberikan nilai bagi penggunanya."
+            </p>
+          </div>
           <div className="hero-contact">
             <a href="https://wa.me/6289636238885" target="_blank" rel="noopener noreferrer" className="contact-item"><FaPhone /> +62 8963 6238 885</a>
             <a href="mailto:karnaandi00@gmail.com" className="contact-item"><FaEnvelope /> karnaandi00@gmail.com</a>
@@ -333,14 +330,39 @@ export default function Portofolio() {
           <div className="projects-container fade-in-up" style={{ animationDelay: '0.6s' }}>
             <section className="portfolio-section" style={{ border: 'none', background: 'transparent', boxShadow: 'none', padding: '0', marginTop: '20px' }}>
 
-              <h3 className="section-title"><FaExternalLinkAlt /> Karya Unggulan (Featured)</h3>
-              <p style={{ color: "var(--web-text-muted)", marginBottom: "30px", fontSize: "1.1rem" }}>
-                Beberapa karya sistem berstandar <i>Enterprise</i> hasil pengembangan yang telah diimplementasikan dalam skala produksi.
-              </p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '30px' }}>
+                <div style={{ flex: '1', minWidth: '280px' }}>
+                  <h3 className="section-title" style={{ marginBottom: '10px' }}><FaExternalLinkAlt /> Karya Unggulan (Featured)</h3>
+                  <p style={{ color: "var(--web-text-muted)", fontSize: "1.1rem", margin: 0 }}>
+                    Beberapa karya sistem berstandar <i>Enterprise</i> hasil pengembangan yang telah diimplementasikan dalam skala produksi.
+                  </p>
+                </div>
+                {FEATURED_PROJECTS.length > 4 && (
+                  <button
+                    onClick={() => setShowAllFeaturedModal(true)}
+                    className="repo-link"
+                    style={{
+                      padding: '10px 24px',
+                      fontSize: '0.95rem',
+                      borderRadius: '30px',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, var(--web-primary), var(--web-secondary))',
+                      color: '#000',
+                      boxShadow: '0 4px 15px rgba(32, 201, 151, 0.3)',
+                      transition: 'all 0.3s ease',
+                      flexShrink: 0
+                    }}
+                  >
+                    Lihat Semua ({FEATURED_PROJECTS.length})
+                  </button>
+                )}
+              </div>
 
               <div className="featured-projects">
                 {currentFeaturedList.map((fp, i) => (
-                  <div key={i} className="featured-card">
+                  <div key={i} className="featured-card" onClick={() => navigate(`/portofolio/featured/${fp.id}`)} style={{ cursor: 'pointer' }}>
                     <div className="fp-image-wrapper">
                       <img src={fp.image} alt={fp.title} className="fp-image" />
                       <div className="fp-glow"></div>
@@ -351,64 +373,27 @@ export default function Portofolio() {
                         <span className="fp-company">{fp.company}</span>
                       </div>
                       <h4>{fp.title}</h4>
-                      <p>{fp.description}</p>
-                      <div className="fp-features">
-                        {fp.features.map((feat, idx) => (
-                          <span key={idx} className="fp-feature"><FaCheckCircle /> {feat}</span>
-                        ))}
+                      <p className="fp-description-truncated">
+                        {fp.description.length > 120 ? fp.description.substring(0, 120) + "..." : fp.description}
+                      </p>
+                      <div className="project-meta" style={{ marginTop: 'auto', paddingTop: '15px', borderTop: '1px solid var(--web-border)' }}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/portofolio/featured/${fp.id}`);
+                          }}
+                          className="repo-link detail-link-btn"
+                          style={{ width: '100%', justifyContent: 'center' }}
+                        >
+                          Lihat Detail
+                        </button>
                       </div>
-                      {(fp.githubUrl || fp.projectUrl) && (
-                        <div className="project-meta" style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px solid var(--web-border)' }}>
-                          <div style={{ display: 'flex', gap: '10px' }}>
-                            {fp.projectUrl && (
-                              <a href={fp.projectUrl} target="_blank" rel="noopener noreferrer" className="repo-link">
-                                <FaExternalLinkAlt /> Kunjungi
-                              </a>
-                            )}
-                            {fp.githubUrl && (
-                              <a href={fp.githubUrl} target="_blank" rel="noopener noreferrer" className="repo-link">
-                                <FaGithub /> Repository
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      )}
                     </div>
                   </div>
                 ))}
               </div>
 
-              {totalFeaturedPages > 1 && (
-                <div className="pagination fade-in-up" style={{ animationDelay: '0.8s', marginTop: '30px' }}>
-                  <button
-                    onClick={() => paginateFeatured(currentFeaturedPage - 1)}
-                    disabled={currentFeaturedPage === 1}
-                    className="page-btn nav-btn"
-                  >
-                    <FaChevronLeft /> Prev
-                  </button>
 
-                  <div className="page-numbers">
-                    {[...Array(totalFeaturedPages)].map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => paginateFeatured(i + 1)}
-                        className={`page-btn num-btn ${currentFeaturedPage === i + 1 ? 'active' : ''}`}
-                      >
-                        {i + 1}
-                      </button>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() => paginateFeatured(currentFeaturedPage + 1)}
-                    disabled={currentFeaturedPage === totalFeaturedPages}
-                    className="page-btn nav-btn"
-                  >
-                    Next <FaChevronRight />
-                  </button>
-                </div>
-              )}
 
               <h3 className="section-title" style={{ marginTop: '60px' }}><FaExternalLinkAlt /> Koleksi Proyek Lainnya</h3>
 
@@ -494,6 +479,63 @@ export default function Portofolio() {
           </div>
         </div>
       </div>
+
+      {/* POPUP LIHAT SEMUA KARYA UNGGULAN */}
+      {showAllFeaturedModal && (
+        <div className="featured-all-modal-overlay" onClick={() => setShowAllFeaturedModal(false)}>
+          <div className="featured-all-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="featured-all-modal-header">
+              <h3>Semua Karya Unggulan</h3>
+              <button className="featured-all-close-btn" onClick={() => setShowAllFeaturedModal(false)} title="Tutup">
+                &times;
+              </button>
+            </div>
+            <div className="featured-all-body">
+              <div className="featured-all-grid">
+                {FEATURED_PROJECTS.map((fp, i) => (
+                  <div 
+                    key={i} 
+                    className="featured-card compact-featured-card" 
+                    onClick={() => {
+                      setShowAllFeaturedModal(false);
+                      navigate(`/portofolio/featured/${fp.id}`);
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="fp-image-wrapper" style={{ height: '140px' }}>
+                      <img src={fp.image} alt={fp.title} className="fp-image" />
+                      <div className="fp-glow"></div>
+                    </div>
+                    <div className="fp-content" style={{ padding: '15px' }}>
+                      <div className="fp-badges" style={{ gap: '8px', marginBottom: '10px' }}>
+                        <span className="fp-status" style={{ padding: '3px 10px', fontSize: '0.75rem' }}>✨ {fp.status}</span>
+                        <span className="fp-company" style={{ padding: '3px 10px', fontSize: '0.75rem' }}>{fp.company}</span>
+                      </div>
+                      <h4 style={{ fontSize: '1.15rem', marginBottom: '8px' }}>{fp.title}</h4>
+                      <p className="fp-description-truncated" style={{ fontSize: '0.85rem', marginBottom: '12px', minHeight: '2.6rem' }}>
+                        {fp.description.length > 80 ? fp.description.substring(0, 80) + "..." : fp.description}
+                      </p>
+                      <div className="project-meta" style={{ marginTop: 'auto', paddingTop: '10px', borderTop: '1px solid var(--web-border)' }}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShowAllFeaturedModal(false);
+                            navigate(`/portofolio/featured/${fp.id}`);
+                          }}
+                          className="repo-link detail-link-btn"
+                          style={{ width: '100%', justifyContent: 'center', padding: '5px 10px', fontSize: '0.8rem' }}
+                        >
+                          Lihat Detail
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
